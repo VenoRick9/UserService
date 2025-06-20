@@ -30,8 +30,8 @@ public class CardInfo {
     private Integer id;
     @Column(name = "number")
     @Size(min = 16, max = 16)
-    @NotNull
-    private Integer number;
+    @NotBlank
+    private String number;
     @Column(name = "holder")
     @Pattern(regexp = "^[A-Z]{1,25}\\s[A-Z]{1,15}$")
     @NotBlank
