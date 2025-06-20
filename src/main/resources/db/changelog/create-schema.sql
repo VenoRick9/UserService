@@ -12,3 +12,4 @@ CREATE TABLE card_info(
     holder          VARCHAR(40) NOT NULL CHECK (char_length(holder) >= 5 AND holder = UPPER(holder)),
     expiration_date DATE        NOT NULL
 );
+CREATE INDEX user_id_index ON card_info (user_id);
