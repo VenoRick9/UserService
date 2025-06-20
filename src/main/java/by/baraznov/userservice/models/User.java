@@ -6,12 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -20,7 +16,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import javax.smartcardio.Card;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,17 +24,17 @@ import java.util.List;
 @Setter
 @Getter
 @RequiredArgsConstructor
-public class User{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "name")
-    @Size(min = 2, max = 15,message = "The name must contain between 2 and 15 characters")
+    @Size(min = 2, max = 15, message = "The name must contain between 2 and 15 characters")
     @NotBlank
     private String name;
     @Column(name = "surname")
-    @Size(min = 2, max = 25,message = "The surname must contain between 2 and 25 characters")
+    @Size(min = 2, max = 25, message = "The surname must contain between 2 and 25 characters")
     @NotBlank
     private String surname;
     @Column(name = "birth_date")
