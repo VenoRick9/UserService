@@ -11,7 +11,7 @@ public record UserUpdateDTO(
         @Size(min = 2, max = 25, message = "The surname must contain between 2 and 25 characters")
         String surname,
         LocalDate birthDate,
-        @Pattern(regexp = "^[A-Za-z0-9]+@[a-z]+\\.[a-z]+$")
+        @Pattern(regexp = "^[A-Za-z0-9._-]+@[a-z]+\\.[a-z]+$")
         String email
 ) {
 }

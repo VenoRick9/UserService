@@ -16,7 +16,7 @@ public record UserCreateDTO(
         String surname,
         @NotNull
         LocalDate birthDate,
-        @Pattern(regexp = "^[A-Za-z0-9]+@[a-z]+\\.[a-z]+$")
+        @Pattern(regexp = "^[A-Za-z0-9._-]+@[a-z]+\\.[a-z]+$")
         @NotBlank
         String email
 ) {
