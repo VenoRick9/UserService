@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public record CardGetDTO(
         Integer id,
-        Integer number,
+        String number,
         String holder,
         LocalDate expirationDate
 ) {
