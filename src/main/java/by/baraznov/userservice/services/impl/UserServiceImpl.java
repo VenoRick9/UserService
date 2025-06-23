@@ -1,0 +1,99 @@
+package by.baraznov.userservice.services.impl;
+
+import by.baraznov.userservice.dtos.user.UserCreateDTO;
+import by.baraznov.userservice.dtos.user.UserGetDTO;
+import by.baraznov.userservice.dtos.user.UserUpdateDTO;
+import by.baraznov.userservice.mappers.user.UserCreateDTOMapper;
+import by.baraznov.userservice.mappers.user.UserGetDTOMapper;
+import by.baraznov.userservice.mappers.user.UserUpdateDTOMapper;
+import by.baraznov.userservice.models.User;
+import by.baraznov.userservice.repositories.UserRepository;
+import by.baraznov.userservice.services.UserService;
+import by.baraznov.userservice.utils.EmailAlreadyExist;
+import by.baraznov.userservice.utils.UserNotFound;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+
+@Service
+@Transactional(readOnly = true)
+@AllArgsConstructor
+public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final UserGetDTOMapper userGetDTOMapper;
+    private final UserUpdateDTOMapper userUpdateDTOMapper;
+    private final UserCreateDTOMapper userCreateDTOMapper;
+
+    @Override
+    @Transactional
+    public UserGetDTO create(UserCreateDTO userCreateDTO) {
+        User user = userCreateDTOMapper.toEntity(userCreateDTO);
+        if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
+            throw new EmailAlreadyExist("User with email " + user.getEmail() + " already exists");
+        }
+        userRepository.save(user);
+        return userGetDTOMapper.toDto(user);
+    }
+
+    @Override
+    public UserGetDTO getUserById(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+        return userGetDTOMapper.toDto(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFound("User with id " + id + " doesn't exist")));
+    }
+
+    @Override
+    public List<UserGetDTO> getUsersByIds(List<Integer> ids) {
+        if (ids == null) {
+            throw new IllegalArgumentException("List with ids cannot be null");
+        }
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return userGetDTOMapper.toDtos(userRepository.findUsersByIds(ids));
+    }
+
+    @Override
+    public List<UserGetDTO> getAllUsers() {
+        return userGetDTOMapper.toDtos(userRepository.findAll());
+    }
+
+    @Override
+    public UserGetDTO getUserByEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("Email cannot be null");
+        }
+        return userGetDTOMapper.toDto(userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UserNotFound("User with email " + email + " doesn't exist")));
+    }
+
+    @Override
+    @Transactional
+    public UserGetDTO update(UserUpdateDTO userUpdateDTO, Integer id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFound("User " + id + " doesn't exist"));
+        userUpdateDTOMapper.merge(user, userUpdateDTO);
+        userRepository.save(user);
+        return userGetDTOMapper.toDto(user);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+        if(!userRepository.existsById(id)) {
+            throw new UserNotFound("User with id " + id + " doesn't exist");
+        }
+        userRepository.deleteById(id);
+    }
+}

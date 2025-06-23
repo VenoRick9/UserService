@@ -44,6 +44,6 @@ public class User {
     @Pattern(regexp = "^[A-Za-z0-9]+@[a-z]+\\.[a-z]+$")
     @NotBlank
     private String email;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CardInfo> cards;
 }
