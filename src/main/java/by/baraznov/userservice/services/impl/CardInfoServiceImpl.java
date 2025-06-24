@@ -14,6 +14,8 @@ import by.baraznov.userservice.utils.CardAlreadyExist;
 import by.baraznov.userservice.utils.CardNotFound;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +34,16 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
-    public CardGetDTO create(CardCreateDTO cardCreateDTO, Integer userId) {
-        if(userId == null) {
+    public CardGetDTO create(CardCreateDTO cardCreateDTO) {
+        if(cardCreateDTO.userId() == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
         if(cardInfoRepository.existsByNumber(cardInfo.getNumber())){
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");
         }
-        cardInfo.setUser(userRepository.findById(userId)
-                .orElseThrow(()-> new UserNotFound("User with id " + userId + " doesn't exist")));
+        cardInfo.setUser(userRepository.findById(cardCreateDTO.userId())
+                .orElseThrow(()-> new UserNotFound("User with id " + cardCreateDTO.userId() + " doesn't exist")));
         cardInfoRepository.save(cardInfo);
         return cardGetDTOMapper.toDto(cardInfo);
     }
@@ -67,8 +69,8 @@ public class CardInfoServiceImpl implements CardInfoService {
     }
 
     @Override
-    public List<CardGetDTO> getAllCards() {
-        return cardGetDTOMapper.toDtos(cardInfoRepository.findAll());
+    public Page<CardGetDTO> getAllCards(Pageable pageable) {
+        return cardInfoRepository.findAll(pageable).map(cardGetDTOMapper::toDto);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class CardInfoServiceImpl implements CardInfoService {
         }
         CardInfo cardInfo = cardInfoRepository.findById(id)
                 .orElseThrow(()-> new CardNotFound("Card with id " + id + " doesn't exist"));
-        if (cardUpdateDTO.number() != null && !cardUpdateDTO.number().equals(cardInfo.getNumber())) {
+        if (cardUpdateDTO.number() != null && cardUpdateDTO.number().equals(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");
         }
         cardUpdateDTOMapper.merge(cardInfo, cardUpdateDTO);

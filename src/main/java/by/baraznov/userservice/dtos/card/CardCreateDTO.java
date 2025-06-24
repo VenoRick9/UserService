@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record CardCreateDTO(
+        @NotNull
+        Integer userId,
         @Size(min = 16, max = 16)
         @NotNull
         String number,

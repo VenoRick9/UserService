@@ -12,6 +12,8 @@ import by.baraznov.userservice.services.UserService;
 import by.baraznov.userservice.utils.EmailAlreadyExist;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserGetDTO> getAllUsers() {
-        return userGetDTOMapper.toDtos(userRepository.findAll());
+    public Page<UserGetDTO> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userGetDTOMapper::toDto);
     }
 
     @Override
