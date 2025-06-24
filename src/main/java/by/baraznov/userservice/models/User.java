@@ -41,7 +41,7 @@ public class User {
     @NotNull
     private LocalDate birthDate;
     @Column(name = "email")
-    @Pattern(regexp = "^[A-Za-z0-9._-]+@[a-z]+\\.[a-z]+$")
+    @Pattern(regexp = "^[A-Za-z0-9._-]+@[a-z]+\\.[a-z]+$", message = "Invalid mail format")
     @NotBlank
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

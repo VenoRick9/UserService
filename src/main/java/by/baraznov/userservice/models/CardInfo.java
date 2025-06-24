@@ -33,7 +33,7 @@ public class CardInfo {
     @NotNull
     private String number;
     @Column(name = "holder")
-    @Pattern(regexp = "^[A-Z]{1,25}\\s[A-Z]{1,15}$")
+    @Pattern(regexp = "^[A-Z]{1,25}\\s[A-Z]{1,15}$", message = "The holder must contains only upper case letters")
     @NotBlank
     private String holder;
     @Column(name = "expiration_date")

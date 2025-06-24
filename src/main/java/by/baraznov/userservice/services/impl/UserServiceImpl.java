@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserGetDTO update(UserUpdateDTO userUpdateDTO, Integer id) {
-        if(id == null) {
+        if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         User user = userRepository.findById(id)
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
-        if(!userRepository.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             throw new UserNotFound("User with id " + id + " doesn't exist");
         }
         userRepository.deleteById(id);

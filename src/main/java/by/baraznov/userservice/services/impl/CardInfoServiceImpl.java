@@ -35,26 +35,26 @@ public class CardInfoServiceImpl implements CardInfoService {
     @Override
     @Transactional
     public CardGetDTO create(CardCreateDTO cardCreateDTO) {
-        if(cardCreateDTO.userId() == null) {
+        if (cardCreateDTO.userId() == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
-        if(cardInfoRepository.existsByNumber(cardInfo.getNumber())){
+        if (cardInfoRepository.existsByNumber(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");
         }
         cardInfo.setUser(userRepository.findById(cardCreateDTO.userId())
-                .orElseThrow(()-> new UserNotFound("User with id " + cardCreateDTO.userId() + " doesn't exist")));
+                .orElseThrow(() -> new UserNotFound("User with id " + cardCreateDTO.userId() + " doesn't exist")));
         cardInfoRepository.save(cardInfo);
         return cardGetDTOMapper.toDto(cardInfo);
     }
 
     @Override
     public CardGetDTO getCardById(Integer id) {
-        if(id == null) {
+        if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         return cardGetDTOMapper.toDto(cardInfoRepository.findById(id)
-                .orElseThrow(()-> new CardNotFound("Card with id " + id + " doesn't exist")));
+                .orElseThrow(() -> new CardNotFound("Card with id " + id + " doesn't exist")));
     }
 
     @Override
@@ -76,11 +76,11 @@ public class CardInfoServiceImpl implements CardInfoService {
     @Override
     @Transactional
     public CardGetDTO update(CardUpdateDTO cardUpdateDTO, Integer id) {
-        if(id == null) {
+        if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         CardInfo cardInfo = cardInfoRepository.findById(id)
-                .orElseThrow(()-> new CardNotFound("Card with id " + id + " doesn't exist"));
+                .orElseThrow(() -> new CardNotFound("Card with id " + id + " doesn't exist"));
         if (cardUpdateDTO.number() != null && cardUpdateDTO.number().equals(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");
         }
@@ -92,10 +92,10 @@ public class CardInfoServiceImpl implements CardInfoService {
     @Override
     @Transactional
     public void delete(Integer id) {
-        if(id == null) {
+        if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
-        if(!cardInfoRepository.existsById(id)) {
+        if (!cardInfoRepository.existsById(id)) {
             throw new CardNotFound("Card with id " + id + " doesn't exist");
         }
         cardInfoRepository.deleteById(id);

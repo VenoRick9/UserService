@@ -28,29 +28,35 @@ import java.util.List;
 @AllArgsConstructor
 public class CardInfoController {
     private final CardInfoService cardInfoService;
+
     @GetMapping
     public ResponseEntity<Page<CardGetDTO>> getAllCards(
             @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(cardInfoService.getAllCards(pageable));
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<CardGetDTO> getCardById(@PathVariable("id") int id){
+    public ResponseEntity<CardGetDTO> getCardById(@PathVariable("id") int id) {
         return ResponseEntity.ok(cardInfoService.getCardById(id));
     }
+
     @GetMapping(params = "ids")
-    public ResponseEntity<List<CardGetDTO>> getCardsByIds(@RequestParam List<Integer> ids){
+    public ResponseEntity<List<CardGetDTO>> getCardsByIds(@RequestParam List<Integer> ids) {
         return ResponseEntity.ok(cardInfoService.getCardsByIds(ids));
     }
+
     @PostMapping
-    public ResponseEntity<CardGetDTO> create(@RequestBody @Valid CardCreateDTO cardCreateDTO){
+    public ResponseEntity<CardGetDTO> create(@RequestBody @Valid CardCreateDTO cardCreateDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cardInfoService.create(cardCreateDTO));
     }
+
     @PatchMapping("/{id}")
-    public ResponseEntity<CardGetDTO> update(@RequestBody @Valid CardUpdateDTO cardUpdateDTO, @PathVariable("id") int id){
+    public ResponseEntity<CardGetDTO> update(@RequestBody @Valid CardUpdateDTO cardUpdateDTO, @PathVariable("id") int id) {
         return ResponseEntity.ok(cardInfoService.update(cardUpdateDTO, id));
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") int id){
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         cardInfoService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

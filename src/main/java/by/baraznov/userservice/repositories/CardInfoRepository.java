@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CardInfoRepository extends JpaRepository<CardInfo, Integer> {
     @Query(value = "SELECT c FROM CardInfo c WHERE c.id IN (:ids)")
-    List<CardInfo> findCardsByIds(@Param(value = "ids")List<Integer> ids);
+    List<CardInfo> findCardsByIds(@Param(value = "ids") List<Integer> ids);
 
     boolean existsByNumber(String number);
 }
