@@ -25,7 +25,52 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/users",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:33:38 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 3,\n            \"name\": \"Bob\",\n            \"surname\": \"Johnson\",\n            \"birthDate\": \"1995-03-30\",\n            \"email\": \"bob.johnson@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 3,\n                    \"userId\": 3,\n                    \"number\": \"3333444455556666\",\n                    \"holder\": \"BOB JOHNSON\",\n                    \"expirationDate\": \"2028-04-20\"\n                }\n            ]\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Emma\",\n            \"surname\": \"Williams\",\n            \"birthDate\": \"1988-09-05\",\n            \"email\": \"emma.williams@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 4,\n                    \"userId\": 4,\n                    \"number\": \"4444555566667777\",\n                    \"holder\": \"EMMA WILLIAMS\",\n                    \"expirationDate\": \"2025-10-10\"\n                },\n                {\n                    \"id\": 5,\n                    \"userId\": 4,\n                    \"number\": \"5555666677778888\",\n                    \"holder\": \"MICHAEL BROWN\",\n                    \"expirationDate\": \"2027-06-05\"\n                }\n            ]\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Michael\",\n            \"surname\": \"Brown\",\n            \"birthDate\": \"1992-07-14\",\n            \"email\": \"michael.brown@example.com\",\n            \"cards\": []\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Olivia\",\n            \"surname\": \"Jones\",\n            \"birthDate\": \"1987-01-23\",\n            \"email\": \"olivia.jones@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 6,\n                    \"userId\": 6,\n                    \"number\": \"6666777788889999\",\n                    \"holder\": \"OLIVIA JONES\",\n                    \"expirationDate\": \"2026-03-14\"\n                }\n            ]\n        },\n        {\n            \"id\": 7,\n            \"name\": \"James\",\n            \"surname\": \"Garcia\",\n            \"birthDate\": \"1993-12-11\",\n            \"email\": \"james.garcia@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 7,\n                    \"userId\": 7,\n                    \"number\": \"1230023412300294\",\n                    \"holder\": \"JAMES GARCIA\",\n                    \"expirationDate\": \"2029-09-30\"\n                }\n            ]\n        },\n        {\n            \"id\": 11,\n            \"name\": \"Benjamin\",\n            \"surname\": \"Lopez\",\n            \"birthDate\": \"1986-08-19\",\n            \"email\": \"benjamin.lopez@example.com\",\n            \"cards\": []\n        },\n        {\n            \"id\": 12,\n            \"name\": \"Mia\",\n            \"surname\": \"Gonzalez\",\n            \"birthDate\": \"1990-10-30\",\n            \"email\": \"mia.gonzalez@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 12,\n                    \"userId\": 12,\n                    \"number\": \"2345234523452345\",\n                    \"holder\": \"MIA GONZALEZ\",\n                    \"expirationDate\": \"2028-08-08\"\n                }\n            ]\n        },\n        {\n            \"id\": 13,\n            \"name\": \"Lucas\",\n            \"surname\": \"Wilson\",\n            \"birthDate\": \"1992-05-12\",\n            \"email\": \"lucas.wilson@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 13,\n                    \"userId\": 13,\n                    \"number\": \"3456345634563456\",\n                    \"holder\": \"LUCAS WILSON\",\n                    \"expirationDate\": \"2027-05-19\"\n                }\n            ]\n        },\n        {\n            \"id\": 14,\n            \"name\": \"Charlotte\",\n            \"surname\": \"Anderson\",\n            \"birthDate\": \"1988-11-27\",\n            \"email\": \"charlotte.anderson@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 14,\n                    \"userId\": 14,\n                    \"number\": \"4567456745674567\",\n                    \"holder\": \"CHARLOTTE ANDERSON\",\n                    \"expirationDate\": \"2026-02-28\"\n                }\n            ]\n        },\n        {\n            \"id\": 15,\n            \"name\": \"Henry\",\n            \"surname\": \"Thomas\",\n            \"birthDate\": \"1993-02-03\",\n            \"email\": \"henry.thomas@example.com\",\n            \"cards\": [\n                {\n                    \"id\": 15,\n                    \"userId\": 15,\n                    \"number\": \"5678567856785678\",\n                    \"holder\": \"HENRY THOMAS\",\n                    \"expirationDate\": \"2029-10-10\"\n                }\n            ]\n        }\n    ],\n    \"page\": {\n        \"size\": 10,\n        \"number\": 0,\n        \"totalElements\": 14,\n        \"totalPages\": 2\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "GetById",
@@ -44,7 +89,53 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/users/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:33:52 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"ALICE\",\n    \"surname\": \"Doe\",\n    \"birthDate\": \"1990-05-15\",\n    \"email\": \"john.doe@example.com\",\n    \"cards\": [\n        {\n            \"id\": 1,\n            \"userId\": 1,\n            \"number\": \"1111222233334444\",\n            \"holder\": \"JOHN DOE\",\n            \"expirationDate\": \"2027-12-31\"\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "GetByEmail",
@@ -68,7 +159,58 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/users?email=alice.smith@example.com",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "alice.smith@example.com"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:34:02 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"name\": \"ALICE\",\n    \"surname\": \"Smith\",\n    \"birthDate\": \"1985-11-22\",\n    \"email\": \"alice.smith@example.com\",\n    \"cards\": [\n        {\n            \"id\": 16,\n            \"userId\": 2,\n            \"number\": \"1230023412341234\",\n            \"holder\": \"ALICE SMITH\",\n            \"expirationDate\": \"2029-01-20\"\n        },\n        {\n            \"id\": 17,\n            \"userId\": 2,\n            \"number\": \"1230023412340034\",\n            \"holder\": \"ALICE SMITH\",\n            \"expirationDate\": \"2029-01-20\"\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "GetByIds",
@@ -92,7 +234,58 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/users?ids=1,2,7,912",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "ids",
+											"value": "1,2,7,912"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:34:11 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 7,\n        \"name\": \"James\",\n        \"surname\": \"Garcia\",\n        \"birthDate\": \"1993-12-11\",\n        \"email\": \"james.garcia@example.com\",\n        \"cards\": [\n            {\n                \"id\": 7,\n                \"userId\": 7,\n                \"number\": \"1230023412300294\",\n                \"holder\": \"JAMES GARCIA\",\n                \"expirationDate\": \"2029-09-30\"\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"name\": \"ALICE\",\n        \"surname\": \"Smith\",\n        \"birthDate\": \"1985-11-22\",\n        \"email\": \"alice.smith@example.com\",\n        \"cards\": [\n            {\n                \"id\": 16,\n                \"userId\": 2,\n                \"number\": \"1230023412341234\",\n                \"holder\": \"ALICE SMITH\",\n                \"expirationDate\": \"2029-01-20\"\n            },\n            {\n                \"id\": 17,\n                \"userId\": 2,\n                \"number\": \"1230023412340034\",\n                \"holder\": \"ALICE SMITH\",\n                \"expirationDate\": \"2029-01-20\"\n            }\n        ]\n    },\n    {\n        \"id\": 1,\n        \"name\": \"ALICE\",\n        \"surname\": \"Doe\",\n        \"birthDate\": \"1990-05-15\",\n        \"email\": \"john.doe@example.com\",\n        \"cards\": [\n            {\n                \"id\": 1,\n                \"userId\": 1,\n                \"number\": \"1111222233334444\",\n                \"holder\": \"JOHN DOE\",\n                \"expirationDate\": \"2027-12-31\"\n            }\n        ]\n    }\n]"
+						}
+					]
 				},
 				{
 					"name": "Create",
@@ -101,7 +294,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Er\",\r\n    \"surname\": \"ETaylor\",\r\n    \"birthDate\": \"1992-02-02\",\r\n    \"email\": \"emma1.taylor@example.com\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Er\",\r\n    \"surname\": \"ETaylor\",\r\n    \"birthDate\": \"1992-02-02\",\r\n    \"email\": \"ermma1.taylor@example.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -119,7 +312,61 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Er\",\r\n    \"surname\": \"ETaylor\",\r\n    \"birthDate\": \"1992-02-02\",\r\n    \"email\": \"ermma1.taylor@example.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/users",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:34:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 18,\n    \"name\": \"Er\",\n    \"surname\": \"ETaylor\",\n    \"birthDate\": \"1992-02-02\",\n    \"email\": \"ermma1.taylor@example.com\",\n    \"cards\": []\n}"
+						}
+					]
 				},
 				{
 					"name": "Update",
@@ -128,7 +375,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"ALICE\"\r\n}",
+							"raw": "{\r\n    \"name\":\"ALICER\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -147,7 +394,62 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"ALICER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/users/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:34:34 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"ALICER\",\n    \"surname\": \"Doe\",\n    \"birthDate\": \"1990-05-15\",\n    \"email\": \"john.doe@example.com\",\n    \"cards\": [\n        {\n            \"id\": 1,\n            \"userId\": 1,\n            \"number\": \"1111222233334444\",\n            \"holder\": \"JOHN DOE\",\n            \"expirationDate\": \"2027-12-31\"\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Delete",
@@ -155,18 +457,56 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/users/10",
+							"raw": "localhost:8080/users/12",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"users",
-								"10"
+								"12"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/users/12",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"12"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:34:43 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
@@ -189,7 +529,52 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/cards",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cards"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:29:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 1,\n            \"userId\": 1,\n            \"number\": \"1111222233334444\",\n            \"holder\": \"JOHN DOE\",\n            \"expirationDate\": \"2027-12-31\"\n        },\n        {\n            \"id\": 3,\n            \"userId\": 3,\n            \"number\": \"3333444455556666\",\n            \"holder\": \"BOB JOHNSON\",\n            \"expirationDate\": \"2028-04-20\"\n        },\n        {\n            \"id\": 4,\n            \"userId\": 4,\n            \"number\": \"4444555566667777\",\n            \"holder\": \"EMMA WILLIAMS\",\n            \"expirationDate\": \"2025-10-10\"\n        },\n        {\n            \"id\": 5,\n            \"userId\": 4,\n            \"number\": \"5555666677778888\",\n            \"holder\": \"MICHAEL BROWN\",\n            \"expirationDate\": \"2027-06-05\"\n        },\n        {\n            \"id\": 6,\n            \"userId\": 6,\n            \"number\": \"6666777788889999\",\n            \"holder\": \"OLIVIA JONES\",\n            \"expirationDate\": \"2026-03-14\"\n        },\n        {\n            \"id\": 7,\n            \"userId\": 7,\n            \"number\": \"1230023412300204\",\n            \"holder\": \"JAMES GARCIA\",\n            \"expirationDate\": \"2029-09-30\"\n        },\n        {\n            \"id\": 11,\n            \"userId\": 11,\n            \"number\": \"1234123412341234\",\n            \"holder\": \"BENJAMIN LOPEZ\",\n            \"expirationDate\": \"2029-01-20\"\n        },\n        {\n            \"id\": 12,\n            \"userId\": 12,\n            \"number\": \"2345234523452345\",\n            \"holder\": \"MIA GONZALEZ\",\n            \"expirationDate\": \"2028-08-08\"\n        },\n        {\n            \"id\": 13,\n            \"userId\": 13,\n            \"number\": \"3456345634563456\",\n            \"holder\": \"LUCAS WILSON\",\n            \"expirationDate\": \"2027-05-19\"\n        },\n        {\n            \"id\": 14,\n            \"userId\": 14,\n            \"number\": \"4567456745674567\",\n            \"holder\": \"CHARLOTTE ANDERSON\",\n            \"expirationDate\": \"2026-02-28\"\n        }\n    ],\n    \"page\": {\n        \"size\": 10,\n        \"number\": 0,\n        \"totalElements\": 12,\n        \"totalPages\": 2\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "GetById",
@@ -208,7 +593,53 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/cards/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cards",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:32:36 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"userId\": 1,\n    \"number\": \"1111222233334444\",\n    \"holder\": \"JOHN DOE\",\n    \"expirationDate\": \"2027-12-31\"\n}"
+						}
+					]
 				},
 				{
 					"name": "GetByIds",
@@ -232,7 +663,58 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/cards?ids=1,3,6,4",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cards"
+									],
+									"query": [
+										{
+											"key": "ids",
+											"value": "1,3,6,4"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:32:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"userId\": 1,\n        \"number\": \"1111222233334444\",\n        \"holder\": \"JOHN DOE\",\n        \"expirationDate\": \"2027-12-31\"\n    },\n    {\n        \"id\": 3,\n        \"userId\": 3,\n        \"number\": \"3333444455556666\",\n        \"holder\": \"BOB JOHNSON\",\n        \"expirationDate\": \"2028-04-20\"\n    },\n    {\n        \"id\": 4,\n        \"userId\": 4,\n        \"number\": \"4444555566667777\",\n        \"holder\": \"EMMA WILLIAMS\",\n        \"expirationDate\": \"2025-10-10\"\n    },\n    {\n        \"id\": 6,\n        \"userId\": 6,\n        \"number\": \"6666777788889999\",\n        \"holder\": \"OLIVIA JONES\",\n        \"expirationDate\": \"2026-03-14\"\n    }\n]"
+						}
+					]
 				},
 				{
 					"name": "Create",
@@ -241,7 +723,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n            \"userId\": 2,\r\n            \"number\": \"1230023412341234\",\r\n            \"holder\": \"ALICE SMITH\",\r\n            \"expirationDate\": \"2029-01-20\"\r\n        }",
+							"raw": "{\r\n            \"userId\": 2,\r\n            \"number\": \"1230023412340034\",\r\n            \"holder\": \"ALICE SMITH\",\r\n            \"expirationDate\": \"2029-01-20\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -259,7 +741,61 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n            \"userId\": 2,\r\n            \"number\": \"1230023412340034\",\r\n            \"holder\": \"ALICE SMITH\",\r\n            \"expirationDate\": \"2029-01-20\"\r\n        }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/cards",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cards"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:33:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 17,\n    \"userId\": 2,\n    \"number\": \"1230023412340034\",\n    \"holder\": \"ALICE SMITH\",\n    \"expirationDate\": \"2029-01-20\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Update",
@@ -268,7 +804,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"number\": \"1230023412300204\"\r\n}",
+							"raw": "{\r\n    \"number\": \"1230023412300294\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -276,18 +812,73 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/cards/2",
+							"raw": "localhost:8080/cards/7",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"cards",
-								"2"
+								"7"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"number\": \"1230023412300294\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/cards/7",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cards",
+										"7"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:33:11 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 7,\n    \"userId\": 7,\n    \"number\": \"1230023412300294\",\n    \"holder\": \"JAMES GARCIA\",\n    \"expirationDate\": \"2029-09-30\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Delete",
@@ -295,18 +886,56 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/cards/2",
+							"raw": "localhost:8080/cards/11",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"cards",
-								"2"
+								"11"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/cards/11",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cards",
+										"11"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 27 Jun 2025 11:33:27 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		}

@@ -10,5 +10,4 @@ import org.mapstruct.Mapping;
 public interface CardGetDTOMapper  extends BaseMapper<CardInfo, CardGetDTO>{
     @Mapping(source = "user.id", target = "userId")
     CardGetDTO toDto(CardInfo cardInfo);
-
 }
