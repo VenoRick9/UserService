@@ -1,5 +1,6 @@
 package by.baraznov.userservice.dtos.card;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 public record CardGetDTO(
@@ -8,5 +9,5 @@ public record CardGetDTO(
         String number,
         String holder,
         LocalDate expirationDate
-) {
+) implements Serializable {
 }

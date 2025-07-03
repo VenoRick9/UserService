@@ -12,6 +12,10 @@ import by.baraznov.userservice.services.UserService;
 import by.baraznov.userservice.utils.EmailAlreadyExist;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+            },
+            put = {
+                    @CachePut(cacheNames = "user", key = "#result.id()")
+            }
+    )
     public UserGetDTO create(UserCreateDTO userCreateDTO) {
         User user = userCreateDTOMapper.toEntity(userCreateDTO);
         if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
@@ -41,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "user", key = "#id")
     public UserGetDTO getUserById(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -61,11 +74,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "allUser", key = "#pageable")
     public Page<UserGetDTO> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(userGetDTOMapper::toDto);
     }
 
     @Override
+    @Cacheable(value = "user", key = "#email")
     public UserGetDTO getUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("Email cannot be null");
@@ -76,6 +91,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#id"),
+                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+            },
+            put = {
+                    @CachePut(cacheNames = "user", key = "#id")
+            }
+    )
     public UserGetDTO update(UserUpdateDTO userUpdateDTO, Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -89,6 +113,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#id"),
+                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+            }
+    )
     public void delete(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");

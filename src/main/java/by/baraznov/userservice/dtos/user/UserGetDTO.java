@@ -2,6 +2,7 @@ package by.baraznov.userservice.dtos.user;
 
 import by.baraznov.userservice.dtos.card.CardGetDTO;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,5 +13,5 @@ public record UserGetDTO(
         LocalDate birthDate,
         String email,
         List<CardGetDTO> cards
-) {
+) implements Serializable {
 }
