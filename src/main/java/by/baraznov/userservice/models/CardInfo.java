@@ -13,8 +13,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -23,7 +24,8 @@ import java.time.LocalDate;
 @Table(name = "card_info")
 @Setter
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class CardInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
