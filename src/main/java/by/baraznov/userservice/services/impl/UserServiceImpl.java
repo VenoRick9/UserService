@@ -93,8 +93,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "user", key = "#id"),
-                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
             },
             put = {
                     @CachePut(cacheNames = "user", key = "#id")

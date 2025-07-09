@@ -34,10 +34,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 class CardInfoControllerTest {
 
-    @Autowired private MockMvc mockMvc;
-    @Autowired private JdbcTemplate jdbcTemplate;
-    @Autowired private CardInfoRepository cardInfoRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private CardInfoRepository cardInfoRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private User user;
     private CardInfo card1, card2;
@@ -102,13 +106,13 @@ class CardInfoControllerTest {
     @Test
     public void test_createCard() throws Exception {
         String json = """
-            {
-              "number": "9999888877776666",
-              "holder": "NEW HOLDER",
-              "expirationDate": "2031-12-12",
-              "userId": %d
-            }
-        """.formatted(user.getId());
+                    {
+                      "number": "9999888877776666",
+                      "holder": "NEW HOLDER",
+                      "expirationDate": "2031-12-12",
+                      "userId": %d
+                    }
+                """.formatted(user.getId());
 
         mockMvc.perform(post("/cards")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -121,12 +125,12 @@ class CardInfoControllerTest {
     @Test
     public void test_updateCard() throws Exception {
         String json = """
-            {
-              "number": "5555444433332222",
-              "holder": "UPDATED HOLDER",
-              "expirationDate": "2035-01-01"
-            }
-        """;
+                    {
+                      "number": "5555444433332222",
+                      "holder": "UPDATED HOLDER",
+                      "expirationDate": "2035-01-01"
+                    }
+                """;
 
         mockMvc.perform(patch("/cards/{id}", card1.getId())
                         .contentType(MediaType.APPLICATION_JSON)

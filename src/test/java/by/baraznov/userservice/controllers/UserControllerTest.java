@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,10 +17,14 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -36,17 +41,21 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
 
     private User user1, user2;
+
 
     @BeforeEach
     public void setUp() {
         jdbcTemplate.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+        stringRedisTemplate.getConnectionFactory().getConnection().flushAll();
         user1 = User.builder()
                 .name("John")
                 .surname("Doe")
@@ -66,6 +75,7 @@ class UserControllerTest {
         userRepository.save(user2);
     }
 
+
     @Test
     public void test_getAllUsers() throws Exception {
         mockMvc.perform(get("/users")
@@ -79,6 +89,10 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.content[0].birthDate").value("1990-01-01"))
                 .andExpect(jsonPath("$.content[0].cards").isArray())
                 .andExpect(jsonPath("$.content", hasSize(2)));
+        String cacheKey = "allUsers::Page request [number: 0, size 10, sort: UNSORTED]";
+        assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
+        assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("John"));
+
     }
 
     @Test
@@ -88,6 +102,9 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("John"))
                 .andExpect(jsonPath("$.surname").value("Doe"));
+        String cacheKey = "user::1";
+        assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
+        assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("John"));
     }
 
     @Test
@@ -109,6 +126,9 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("John")))
                 .andExpect(jsonPath("$.surname", is("Doe")));
+        String cacheKey = "user::john.doe@example.com";
+        assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
+        assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("John"));
     }
 
     @Test
@@ -130,6 +150,9 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("bob.brown@example.com"));
 
         assertEquals(3, userRepository.count());
+        String cacheKey = "user::3";
+        assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
+        assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("Bob"));
     }
 
     @Test
@@ -149,15 +172,17 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Johnny"))
                 .andExpect(jsonPath("$.email").value("johnny.doe@example.com"));
+        String cacheKey = "user::1";
+        assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
+        assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("Johnny"));
     }
 
     @Test
     public void test_deleteUser() throws Exception {
         mockMvc.perform(delete("/users/{id}", user2.getId()))
                 .andExpect(status().isNoContent());
-
         assertEquals(1, userRepository.count());
+        String cacheKey = "user::2";
+        assertNull(stringRedisTemplate.opsForValue().get(cacheKey));
     }
-
-
 }

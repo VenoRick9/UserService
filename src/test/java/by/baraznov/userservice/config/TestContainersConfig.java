@@ -2,6 +2,9 @@ package by.baraznov.userservice.config;
 
 
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -27,5 +30,10 @@ public class TestContainersConfig {
         System.setProperty("spring.redis.host", redisContainer.getHost());
         System.setProperty("spring.redis.port", String.valueOf(redisContainer.getMappedPort(6379)));
 
+    }
+
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        return new StringRedisTemplate(redisConnectionFactory);
     }
 }
