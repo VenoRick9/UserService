@@ -1,5 +1,15 @@
 services:
   cache:
     image: redis:7.4.2
+    container_name: redis
     ports:
       - '6379:6379'
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Postgres_9
+      POSTGRES_DB: user-service
+    ports:
+      - "5430:5432"
