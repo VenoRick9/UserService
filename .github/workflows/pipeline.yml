@@ -40,16 +40,13 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: test
           SPRING_DATA_REDIS_HOST: localhost
           SPRING_DATA_REDIS_PORT: 6379
+
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
-        with:
-          args: >
-            -Dsonar.projectKey=VenoRick9_UserService
-            -Dsonar.organization=venorick9
-            -Dsonar.sources=src
-            -Dsonar.java.binaries=target/classes
-            -Dsonar.analysis.ci=true
-            -Dsonar.branch.name=${{ github.ref_name }}
+        run: |
+          mvn -B sonar:sonar \
+            -Dsonar.projectKey=VenoRick9_UserService \
+            -Dsonar.organization=venorick9 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN \
