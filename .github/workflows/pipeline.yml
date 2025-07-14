@@ -40,7 +40,6 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: test
           SPRING_DATA_REDIS_HOST: localhost
           SPRING_DATA_REDIS_PORT: 6379
-
       - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -50,3 +49,14 @@ jobs:
             -Dsonar.organization=venorick9 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN \
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Docker image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/userservice:${IMAGE_TAG} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/userservice:${IMAGE_TAG}
