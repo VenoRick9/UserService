@@ -9,6 +9,10 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Setup Testcontainers Cloud Client
+        uses: atomicjar/testcontainers-cloud-setup-action@v1
+        with:
+          token: ${{ secrets.TC_CLOUD_TOKEN }}
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
 
