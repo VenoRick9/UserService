@@ -2,7 +2,7 @@ name: Java CI with Maven
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     services:
       docker:
         image: docker:dind
@@ -13,11 +13,16 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Validate Docker
+        run: |
+          docker info
+          docker run --rm hello-world
       - name: Run the Maven verify phase
-        run: ./mvnw verify
+        run: mvn --batch-mode --update-snapshots verify
         env:
           TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
           DOCKER_HOST: tcp://localhost:2375
           TESTCONTAINERS_RYUK_DISABLED: "true"
+
 
 
