@@ -1,7 +1,5 @@
 name: CI Pipeline
-
-on: [ push, pull_request ]
-
+on: [ push ]
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -42,3 +40,8 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: test
           SPRING_DATA_REDIS_HOST: localhost
           SPRING_DATA_REDIS_PORT: 6379
+      - name: Analyze with SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=UserService -Dsonar.organization=venorick9 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
