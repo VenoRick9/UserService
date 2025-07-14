@@ -44,4 +44,12 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: 'https://sonarcloud.io/'
+          SONAR_HOST_URL: https://sonarcloud.io
+        with:
+          args: >
+            -Dsonar.projectKey=VenoRick9_UserService
+            -Dsonar.organization=venorick9
+            -Dsonar.sources=src
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.analysis.ci=true
+            -Dsonar.branch.name=${{ github.ref_name }}
