@@ -2,7 +2,11 @@ name: CI Pipeline
 on: [ push ]
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged
     steps:
       - uses: actions/checkout@v4
       - name: Set up Java 21
@@ -10,6 +14,10 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Wait for services
+        run: |
+          echo "Waiting for Redis and PostgreSQL to be ready..."
+          sleep 15
       - name: Build and test
         run: mvn --batch-mode --update-snapshots verify
       - name: SonarQube Scan
