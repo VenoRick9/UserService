@@ -44,8 +44,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B sonar:sonar -DskipTests
-          -Dsonar.projectKey=VenoRick9_UserService
-          -Dsonar.organization=venorick9
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.login=$SONAR_TOKEN
+        run: |
+          mvn -B sonar:sonar \
+            -DskipTests \
+            -Dsonar.projectKey=VenoRick9_UserService \
+            -Dsonar.organization=venorick9 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.analysis.ci=true \            
+            -Dsonar.branch.name=${{ github.ref_name }} \ 
+            -Dsonar.branch.target=main    
