@@ -14,9 +14,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Run the Maven verify phase
-        run: mvn --batch-mode --update-snapshots verify
+        run: ./mvnw verify
         env:
-          TESTCONTAINERS_RYUK_DISABLED: "true"
+          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
           DOCKER_HOST: tcp://localhost:2375
+          TESTCONTAINERS_RYUK_DISABLED: "true"
 
 
