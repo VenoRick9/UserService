@@ -2,11 +2,23 @@ name: CI Pipeline
 on: [ push ]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     services:
       docker:
         image: docker:dind
         options: --privileged
+      redis:
+        image: redis:7.4.2
+        ports:
+          - 6379:6379
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v4
       - name: Set up Java 21
@@ -20,6 +32,14 @@ jobs:
           sleep 15
       - name: Build and test
         run: mvn --batch-mode --update-snapshots verify
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+          TESTCONTAINERS_RYUK_DISABLED: "true"
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/test
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test
+          SPRING_DATA_REDIS_HOST: localhost
+          SPRING_DATA_REDIS_PORT: 6379
       - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
