@@ -27,8 +27,8 @@ public class TestContainersConfig {
         System.setProperty("spring.datasource.username", postgres.getUsername());
         System.setProperty("spring.datasource.password", postgres.getPassword());
         redisContainer.start();
-        System.setProperty("spring.redis.host", redisContainer.getHost());
-        System.setProperty("spring.redis.port", String.valueOf(redisContainer.getMappedPort(6379)));
+        System.setProperty("spring.data.redis.host", redisContainer.getHost());
+        System.setProperty("spring.data.redis.port", String.valueOf(redisContainer.getMappedPort(6379)));
 
     }
 
