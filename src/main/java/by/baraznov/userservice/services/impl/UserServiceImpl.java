@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
             },
             put = {
                     @CachePut(cacheNames = "user", key = "#result.id()")
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "allUser", key = "#pageable")
+    @Cacheable(value = "allUsers", key = "#pageable")
     public Page<UserGetDTO> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(userGetDTOMapper::toDto);
     }
@@ -93,8 +93,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Caching(
             evict = {
-                    @CacheEvict(cacheNames = "user", key = "#id"),
-                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
             },
             put = {
                     @CachePut(cacheNames = "user", key = "#id")
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "user", key = "#id"),
-                    @CacheEvict(cacheNames = "allUser", allEntries = true)
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
             }
     )
     public void delete(Integer id) {

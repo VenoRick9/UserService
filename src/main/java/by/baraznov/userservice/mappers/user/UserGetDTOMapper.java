@@ -31,8 +31,7 @@ public interface UserGetDTOMapper extends BaseMapper<User, UserGetDTO> {
         holder = cardInfo.getHolder();
         expirationDate = cardInfo.getExpirationDate();
         Integer userId = cardInfo.getUser().getId();
-        CardGetDTO cardGetDTO = new CardGetDTO( id, userId, number, holder, expirationDate );
-        return cardGetDTO;
+        return new CardGetDTO( id, userId, number, holder, expirationDate );
     }
     @Named("cardInfoToCardGetDTOList")
     default List<CardGetDTO> cardToGetDTOList(List<CardInfo> cards) {
