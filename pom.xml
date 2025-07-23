@@ -26,11 +26,6 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-        <java.version>21</java.version>
-        <sonar.organization>venorick9</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
