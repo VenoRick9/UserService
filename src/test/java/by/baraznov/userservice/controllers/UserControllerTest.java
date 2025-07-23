@@ -89,6 +89,7 @@ class UserControllerTest {
         mockMvc.perform(get("/users")
                         .param("page", "0")
                         .param("size", "10")
+
                         .accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -98,7 +99,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.content[0].birthDate").value("1990-01-01"))
                 .andExpect(jsonPath("$.content[0].cards").isArray())
                 .andExpect(jsonPath("$.content", hasSize(2)));
-        String cacheKey = "allUsers::Page request [number: 0, size 10, sort: UNSORTED]";
+        String cacheKey = "allUsers::Page request [number: 0, size 10, sort: id: ASC]";
         assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
         assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("John"));
 

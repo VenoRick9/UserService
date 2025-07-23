@@ -3,6 +3,8 @@ on: [ push ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET_ACCESS: ${{ secrets.JWT_SECRET_ACCESS }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Java 21
