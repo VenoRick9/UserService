@@ -9,6 +9,9 @@ import by.baraznov.userservice.mappers.user.UserUpdateDTOMapper;
 import by.baraznov.userservice.models.User;
 import by.baraznov.userservice.repositories.UserRepository;
 import by.baraznov.userservice.services.impl.UserServiceImpl;
+import by.baraznov.userservice.utils.EmailAlreadyExist;
+import by.baraznov.userservice.utils.UserAlreadyExist;
+import by.baraznov.userservice.utils.UserNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,10 +29,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -200,4 +205,55 @@ class UserServiceTest {
         verify(userRepository).existsById(userId);
         verify(userRepository).deleteById(userId);
     }
+
+
+    @Test
+    public void test_getUserById_shouldThrowException() {
+        Integer userId = 99;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFound.class, () -> userService.getUserById(userId));
+        verify(userRepository).findById(userId);
+    }
+    @Test
+    public void test_createUser_shouldThrowEmailAlreadyExist() {
+        Integer userId = 1;
+        String email = "existing@example.com";
+        UserCreateDTO createDTO = new UserCreateDTO("John", "Doe", LocalDate.of(1990, 1, 1), email);
+        User user = new User(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(userId);
+
+        when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
+        when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user)); // <- email exists
+
+        assertThrows(EmailAlreadyExist.class, () -> userService.create(createDTO, authentication));
+
+        verify(userRepository).findUserByEmail(email);
+        verify(userCreateDTOMapper).toEntity(createDTO);
+        verifyNoMoreInteractions(userRepository);
+    }
+    @Test
+    public void test_createUser_shouldThrowUserAlreadyExist() {
+        Integer userId = 1;
+        String email = "new@example.com";
+        UserCreateDTO createDTO = new UserCreateDTO("John", "Doe", LocalDate.of(1990, 1, 1), email);
+        User user = new User(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(userId);
+
+        when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
+        when(userRepository.findUserByEmail(email)).thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
+
+        assertThrows(UserAlreadyExist.class, () -> userService.create(createDTO, authentication));
+
+        verify(userRepository).findUserByEmail(email);
+        verify(userRepository).findById(userId);
+        verify(userCreateDTOMapper).toEntity(createDTO);
+        verifyNoMoreInteractions(userRepository);
+    }
+
 }

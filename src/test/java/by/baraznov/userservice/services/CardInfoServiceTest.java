@@ -11,6 +11,8 @@ import by.baraznov.userservice.models.User;
 import by.baraznov.userservice.repositories.CardInfoRepository;
 import by.baraznov.userservice.repositories.UserRepository;
 import by.baraznov.userservice.services.impl.CardInfoServiceImpl;
+import by.baraznov.userservice.utils.CardAlreadyExist;
+import by.baraznov.userservice.utils.CardNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,9 +29,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -188,6 +193,48 @@ class CardInfoServiceTest {
         verify(cardInfoRepository).existsById(cardId);
         verify(cardInfoRepository).deleteById(cardId);
     }
+
+    @Test
+    public void test_createCard_shouldThrowCardAlreadyExist() {
+        Integer userId = 1;
+        String cardNumber = "1234 5678 9012 3456";
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(userId);
+
+        CardCreateDTO cardCreateDTO = new CardCreateDTO(cardNumber, "JOHN FOG", LocalDate.now());
+        CardInfo cardInfo = new CardInfo();
+        cardInfo.setNumber(cardNumber);
+
+        when(cardCreateDTOMapper.toEntity(cardCreateDTO)).thenReturn(cardInfo);
+        when(cardInfoRepository.existsByNumber(cardNumber)).thenReturn(true);
+
+        CardAlreadyExist exception = assertThrows(
+                CardAlreadyExist.class,
+                () -> cardService.create(cardCreateDTO, authentication)
+        );
+
+        assertTrue(exception.getMessage().contains("already exist"));
+        verify(cardInfoRepository).existsByNumber(cardNumber);
+        verify(cardCreateDTOMapper).toEntity(cardCreateDTO);
+        verifyNoMoreInteractions(cardInfoRepository);
+    }
+
+    @Test
+    public void test_getCardById_shouldThrowCardNotFound() {
+        Integer cardId = 99;
+        when(cardInfoRepository.findById(cardId)).thenReturn(Optional.empty());
+
+        CardNotFound exception = assertThrows(
+                CardNotFound.class,
+                () -> cardService.getCardById(cardId)
+        );
+
+        assertEquals("Card with id " + cardId + " doesn't exist", exception.getMessage());
+        verify(cardInfoRepository).findById(cardId);
+    }
+
+
 }
 
 
