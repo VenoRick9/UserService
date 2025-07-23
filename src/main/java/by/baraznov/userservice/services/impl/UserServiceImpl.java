@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,11 +44,12 @@ public class UserServiceImpl implements UserService {
                     @CachePut(cacheNames = "user", key = "#result.id()")
             }
     )
-    public UserGetDTO create(UserCreateDTO userCreateDTO) {
+    public UserGetDTO create(UserCreateDTO userCreateDTO, Authentication authentication) {
         User user = userCreateDTOMapper.toEntity(userCreateDTO);
         if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist("User with email " + user.getEmail() + " already exists");
         }
+        user.setId((Integer) authentication.getPrincipal());
         userRepository.save(user);
         return userGetDTOMapper.toDto(user);
     }

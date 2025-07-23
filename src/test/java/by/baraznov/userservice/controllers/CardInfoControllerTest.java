@@ -5,6 +5,7 @@ import by.baraznov.userservice.models.CardInfo;
 import by.baraznov.userservice.models.User;
 import by.baraznov.userservice.repositories.CardInfoRepository;
 import by.baraznov.userservice.repositories.UserRepository;
+import by.baraznov.userservice.util.JwtUtilTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,10 @@ class CardInfoControllerTest {
     private CardInfoRepository cardInfoRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtUtilTest testJwtUtil;
+
+    private String token;
 
     private User user;
     private CardInfo card1, card2;
@@ -52,6 +57,7 @@ class CardInfoControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
 
         user = User.builder()
+                .id(1)
                 .name("Test")
                 .surname("User")
                 .email("test.user@example.com")
@@ -74,6 +80,7 @@ class CardInfoControllerTest {
                 .build();
 
         cardInfoRepository.saveAll(List.of(card1, card2));
+        token = testJwtUtil.generateToken(user);
     }
 
     @Test
@@ -81,7 +88,8 @@ class CardInfoControllerTest {
         mockMvc.perform(get("/cards")
                         .param("page", "0")
                         .param("size", "10")
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(2)))
                 .andExpect(jsonPath("$.content[0].number").value("1234567890123456"));
@@ -89,7 +97,8 @@ class CardInfoControllerTest {
 
     @Test
     public void test_getCardById() throws Exception {
-        mockMvc.perform(get("/cards/{id}", card1.getId()))
+        mockMvc.perform(get("/cards/{id}", card1.getId())
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.holder").value("TEST USER"));
     }
@@ -97,7 +106,8 @@ class CardInfoControllerTest {
     @Test
     public void test_getCardsByIds() throws Exception {
         mockMvc.perform(get("/cards")
-                        .param("ids", String.valueOf(card1.getId()), String.valueOf(card2.getId())))
+                        .param("ids", String.valueOf(card1.getId()), String.valueOf(card2.getId()))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].number").value("1234567890123456"));
@@ -109,13 +119,13 @@ class CardInfoControllerTest {
                     {
                       "number": "9999888877776666",
                       "holder": "NEW HOLDER",
-                      "expirationDate": "2031-12-12",
-                      "userId": %d
+                      "expirationDate": "2031-12-12"
                     }
-                """.formatted(user.getId());
+                """;
 
         mockMvc.perform(post("/cards")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.holder").value("NEW HOLDER"))
@@ -134,6 +144,7 @@ class CardInfoControllerTest {
 
         mockMvc.perform(patch("/cards/{id}", card1.getId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.number").value("5555444433332222"))
@@ -142,7 +153,8 @@ class CardInfoControllerTest {
 
     @Test
     public void test_deleteCard() throws Exception {
-        mockMvc.perform(delete("/cards/{id}", card2.getId()))
+        mockMvc.perform(delete("/cards/{id}", card2.getId())
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isNoContent());
 
         assertFalse(cardInfoRepository.findById(card2.getId()).isPresent());

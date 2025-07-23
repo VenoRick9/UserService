@@ -16,6 +16,7 @@ import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,16 +35,17 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
-    public CardGetDTO create(CardCreateDTO cardCreateDTO) {
-        if (cardCreateDTO.userId() == null) {
+    public CardGetDTO create(CardCreateDTO cardCreateDTO, Authentication authentication) {
+        Integer userId = (Integer) authentication.getPrincipal();
+        if (userId == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
         if (cardInfoRepository.existsByNumber(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");
         }
-        cardInfo.setUser(userRepository.findById(cardCreateDTO.userId())
-                .orElseThrow(() -> new UserNotFound("User with id " + cardCreateDTO.userId() + " doesn't exist")));
+        cardInfo.setUser(userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFound("User with id " + userId + " doesn't exist")));
         cardInfoRepository.save(cardInfo);
         return cardGetDTOMapper.toDto(cardInfo);
     }

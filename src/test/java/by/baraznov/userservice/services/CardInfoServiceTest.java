@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -120,7 +122,7 @@ class CardInfoServiceTest {
     void test_createCard() {
         User user = new User(1, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
-        CardCreateDTO createDTO = new CardCreateDTO(user.getId(), "1234567890123456", "JOHN DOE",
+        CardCreateDTO createDTO = new CardCreateDTO("1234567890123456", "JOHN DOE",
                 LocalDate.of(2030, 1, 1));
         CardInfo cardInfo = new CardInfo(null, "1234567890123456", "JOHN DOE",
                 LocalDate.of(2030, 1, 1), null);
@@ -128,13 +130,15 @@ class CardInfoServiceTest {
                 LocalDate.of(2030, 1, 1), user);
         CardGetDTO getDTO = new CardGetDTO(1, user.getId(), "1234567890123456", "JOHN DOE",
                 LocalDate.of(2030, 1, 1));
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(1);
         when(cardCreateDTOMapper.toEntity(createDTO)).thenReturn(cardInfo);
         when(cardInfoRepository.existsByNumber(cardInfo.getNumber())).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(cardInfoRepository.save(cardInfo)).thenReturn(savedCard);
         when(cardGetDTOMapper.toDto(cardInfo)).thenReturn(getDTO);
 
-        CardGetDTO result = cardService.create(createDTO);
+        CardGetDTO result = cardService.create(createDTO, authentication);
 
         assertEquals(getDTO, result);
         verify(cardCreateDTOMapper).toEntity(createDTO);

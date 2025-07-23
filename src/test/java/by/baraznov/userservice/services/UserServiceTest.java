@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -141,12 +143,14 @@ class UserServiceTest {
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO getDTO = new UserGetDTO(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(1);
         when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(savedUser);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         when(userGetDTOMapper.toDto(userCaptor.capture())).thenReturn(getDTO);
 
-        UserGetDTO result = userService.create(createDTO);
+        UserGetDTO result = userService.create(createDTO, authentication);
 
         assertEquals(getDTO, result);
         User capturedUser = userCaptor.getValue();

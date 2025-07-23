@@ -5,11 +5,12 @@ import by.baraznov.userservice.dtos.user.UserGetDTO;
 import by.baraznov.userservice.dtos.user.UserUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface UserService {
-    UserGetDTO create(UserCreateDTO userCreateDTO);
+    UserGetDTO create(UserCreateDTO userCreateDTO, Authentication authentication);
 
     UserGetDTO getUserById(Integer id);
 

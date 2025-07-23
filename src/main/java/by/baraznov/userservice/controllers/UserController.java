@@ -1,16 +1,17 @@
 package by.baraznov.userservice.controllers;
 
+import by.baraznov.userservice.dtos.PageResponse;
 import by.baraznov.userservice.dtos.user.UserCreateDTO;
 import by.baraznov.userservice.dtos.user.UserGetDTO;
 import by.baraznov.userservice.dtos.user.UserUpdateDTO;
 import by.baraznov.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,9 +31,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<Page<UserGetDTO>> getAllUsers(
+    public ResponseEntity<PageResponse<UserGetDTO>> getAllUsers(
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(userService.getAllUsers(pageable));
+        return ResponseEntity.ok(PageResponse.toPageResponse(userService.getAllUsers(pageable)));
     }
 
     @GetMapping("/{id}")
@@ -51,8 +52,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserGetDTO> create(@RequestBody @Valid UserCreateDTO userCreateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userCreateDTO));
+    public ResponseEntity<UserGetDTO> create(@RequestBody @Valid UserCreateDTO userCreateDTO,
+                                             Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userCreateDTO, authentication));
     }
 
     @PatchMapping("/{id}")
