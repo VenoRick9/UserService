@@ -110,7 +110,7 @@ class CardInfoControllerTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].number").value("1234567890123456"));
+                .andExpect(jsonPath("$[1].number").value("1234567890123456"));
     }
 
     @Test
