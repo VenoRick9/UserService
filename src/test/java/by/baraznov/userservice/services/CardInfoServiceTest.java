@@ -18,6 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +33,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -51,6 +55,8 @@ class CardInfoServiceTest {
     private CardUpdateDTOMapper cardUpdateDTOMapper;
     @InjectMocks
     private CardInfoServiceImpl cardService;
+    @Mock
+    private CacheManager cacheManager;
 
     @Test
     public void test_getAllCards() {
@@ -186,7 +192,15 @@ class CardInfoServiceTest {
     @Test
     void test_deleteCard() {
         Integer cardId = 1;
+        CardInfo cardInfo = new CardInfo();
+        User user = new User();
+        user.setId(42);
+        cardInfo.setUser(user);
         when(cardInfoRepository.existsById(cardId)).thenReturn(true);
+        when(cardInfoRepository.findById(cardId)).thenReturn(Optional.of(cardInfo));
+        Cache cache = mock(Cache.class);
+        when(cacheManager.getCache("user")).thenReturn(cache);
+        doNothing().when(cache).evict(any());
 
         cardService.delete(cardId);
 

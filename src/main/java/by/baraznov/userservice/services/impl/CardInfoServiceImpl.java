@@ -14,6 +14,7 @@ import by.baraznov.userservice.utils.CardAlreadyExist;
 import by.baraznov.userservice.utils.CardNotFound;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,6 +36,7 @@ public class CardInfoServiceImpl implements CardInfoService {
     private final CardGetDTOMapper cardGetDTOMapper;
     private final CardUpdateDTOMapper cardUpdateDTOMapper;
     private final CardCreateDTOMapper cardCreateDTOMapper;
+    private final CacheManager cacheManager;
 
     @Override
     @Transactional
@@ -107,12 +110,7 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
-    @Caching(
-            evict = {
-                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
-                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
-            }
-    )
+    @CacheEvict(cacheNames = "allUsers", allEntries = true)
     public void delete(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -120,6 +118,11 @@ public class CardInfoServiceImpl implements CardInfoService {
         if (!cardInfoRepository.existsById(id)) {
             throw new CardNotFound("Card with id " + id + " doesn't exist");
         }
+        CardInfo card = cardInfoRepository.findById(id)
+                .orElseThrow(() -> new CardNotFound("Card with id " + id + " doesn't exist"));
+
+        Integer userId = card.getUser().getId();
         cardInfoRepository.deleteById(id);
+        Objects.requireNonNull(cacheManager.getCache("user")).evict(userId);
     }
 }
