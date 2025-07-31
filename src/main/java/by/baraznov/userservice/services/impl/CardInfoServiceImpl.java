@@ -14,6 +14,8 @@ import by.baraznov.userservice.utils.CardAlreadyExist;
 import by.baraznov.userservice.utils.CardNotFound;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -35,6 +37,12 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+            }
+    )
     public CardGetDTO create(CardCreateDTO cardCreateDTO, Authentication authentication) {
         Integer userId = (Integer) authentication.getPrincipal();
         if (userId == null) {
@@ -77,6 +85,12 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+            }
+    )
     public CardGetDTO update(CardUpdateDTO cardUpdateDTO, Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -93,6 +107,12 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+            }
+    )
     public void delete(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
