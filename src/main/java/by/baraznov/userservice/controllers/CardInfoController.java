@@ -1,16 +1,17 @@
 package by.baraznov.userservice.controllers;
 
+import by.baraznov.userservice.dtos.PageResponse;
 import by.baraznov.userservice.dtos.card.CardCreateDTO;
 import by.baraznov.userservice.dtos.card.CardGetDTO;
 import by.baraznov.userservice.dtos.card.CardUpdateDTO;
 import by.baraznov.userservice.services.CardInfoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,9 +31,9 @@ public class CardInfoController {
     private final CardInfoService cardInfoService;
 
     @GetMapping
-    public ResponseEntity<Page<CardGetDTO>> getAllCards(
+    public ResponseEntity<PageResponse<CardGetDTO>> getAllCards(
             @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(cardInfoService.getAllCards(pageable));
+        return ResponseEntity.ok(PageResponse.toPageResponse(cardInfoService.getAllCards(pageable)));
     }
 
     @GetMapping("/{id}")
@@ -46,12 +47,14 @@ public class CardInfoController {
     }
 
     @PostMapping
-    public ResponseEntity<CardGetDTO> create(@RequestBody @Valid CardCreateDTO cardCreateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(cardInfoService.create(cardCreateDTO));
+    public ResponseEntity<CardGetDTO> create(@RequestBody @Valid CardCreateDTO cardCreateDTO,
+                                             Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cardInfoService.create(cardCreateDTO, authentication));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CardGetDTO> update(@RequestBody @Valid CardUpdateDTO cardUpdateDTO, @PathVariable("id") int id) {
+    public ResponseEntity<CardGetDTO> update(@RequestBody @Valid CardUpdateDTO cardUpdateDTO,
+                                             @PathVariable("id") int id) {
         return ResponseEntity.ok(cardInfoService.update(cardUpdateDTO, id));
     }
 

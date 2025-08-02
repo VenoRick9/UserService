@@ -10,6 +10,7 @@ import by.baraznov.userservice.models.User;
 import by.baraznov.userservice.repositories.UserRepository;
 import by.baraznov.userservice.services.UserService;
 import by.baraznov.userservice.utils.EmailAlreadyExist;
+import by.baraznov.userservice.utils.UserAlreadyExist;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,11 +45,16 @@ public class UserServiceImpl implements UserService {
                     @CachePut(cacheNames = "user", key = "#result.id()")
             }
     )
-    public UserGetDTO create(UserCreateDTO userCreateDTO) {
+    public UserGetDTO create(UserCreateDTO userCreateDTO, Authentication authentication) {
+        Integer userId = (Integer) authentication.getPrincipal();
         User user = userCreateDTOMapper.toEntity(userCreateDTO);
         if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist("User with email " + user.getEmail() + " already exists");
         }
+        if(userRepository.findById(userId).isPresent()) {
+            throw new UserAlreadyExist("User with id " + userId + " already exists");
+        }
+        user.setId(userId);
         userRepository.save(user);
         return userGetDTOMapper.toDto(user);
     }

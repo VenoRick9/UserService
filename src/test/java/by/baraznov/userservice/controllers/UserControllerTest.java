@@ -3,6 +3,7 @@ package by.baraznov.userservice.controllers;
 import by.baraznov.userservice.config.TestContainersConfig;
 import by.baraznov.userservice.models.User;
 import by.baraznov.userservice.repositories.UserRepository;
+import by.baraznov.userservice.util.JwtUtilTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,12 @@ class UserControllerTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private JwtUtilTest testJwtUtil;
 
 
     private User user1, user2;
+    private String token;
 
 
     @BeforeEach
@@ -57,6 +61,7 @@ class UserControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
         stringRedisTemplate.getConnectionFactory().getConnection().flushAll();
         user1 = User.builder()
+                .id(1)
                 .name("John")
                 .surname("Doe")
                 .birthDate(LocalDate.of(1990, 1, 1))
@@ -65,6 +70,7 @@ class UserControllerTest {
                 .build();
 
         user2 = User.builder()
+                .id(2)
                 .name("Alice")
                 .surname("Smith")
                 .birthDate(LocalDate.of(1985, 5, 20))
@@ -73,15 +79,19 @@ class UserControllerTest {
                 .build();
         userRepository.save(user1);
         userRepository.save(user2);
+        token = testJwtUtil.generateToken(user1);
     }
 
 
     @Test
     public void test_getAllUsers() throws Exception {
+
         mockMvc.perform(get("/users")
                         .param("page", "0")
                         .param("size", "10")
-                        .accept(MediaType.APPLICATION_JSON))
+
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("John"))
                 .andExpect(jsonPath("$.content[1].surname").value("Smith"))
@@ -89,7 +99,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.content[0].birthDate").value("1990-01-01"))
                 .andExpect(jsonPath("$.content[0].cards").isArray())
                 .andExpect(jsonPath("$.content", hasSize(2)));
-        String cacheKey = "allUsers::Page request [number: 0, size 10, sort: UNSORTED]";
+        String cacheKey = "allUsers::Page request [number: 0, size 10, sort: id: ASC]";
         assertNotNull(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
         assertTrue(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)).contains("John"));
 
@@ -98,7 +108,8 @@ class UserControllerTest {
     @Test
     public void test_getUserById() throws Exception {
         mockMvc.perform(get("/users/{id}", user1.getId())
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("John"))
                 .andExpect(jsonPath("$.surname").value("Doe"));
@@ -111,7 +122,8 @@ class UserControllerTest {
     public void test_getUsersByIds() throws Exception {
         mockMvc.perform(get("/users")
                         .param("ids", String.valueOf(user1.getId()), String.valueOf(user2.getId()))
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].email", is("john.doe@example.com")))
@@ -122,7 +134,8 @@ class UserControllerTest {
     public void test_getUserByEmail() throws Exception {
         mockMvc.perform(get("/users")
                         .param("email", String.valueOf(user1.getEmail()))
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("John")))
                 .andExpect(jsonPath("$.surname", is("Doe")));
@@ -133,6 +146,8 @@ class UserControllerTest {
 
     @Test
     public void test_createUser() throws Exception {
+        token = testJwtUtil.generateToken(new User()
+                .builder().id(3).build());
         String json = """
                     {
                       "name": "Bob",
@@ -144,6 +159,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Bob"))
@@ -168,6 +184,7 @@ class UserControllerTest {
 
         mockMvc.perform(patch("/users/{id}", user1.getId())
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Johnny"))
@@ -179,7 +196,8 @@ class UserControllerTest {
 
     @Test
     public void test_deleteUser() throws Exception {
-        mockMvc.perform(delete("/users/{id}", user2.getId()))
+        mockMvc.perform(delete("/users/{id}", user2.getId())
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isNoContent());
         assertEquals(1, userRepository.count());
         String cacheKey = "user::2";

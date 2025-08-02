@@ -5,11 +5,12 @@ import by.baraznov.userservice.dtos.card.CardGetDTO;
 import by.baraznov.userservice.dtos.card.CardUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface CardInfoService {
-    CardGetDTO create(CardCreateDTO cardCreateDTO);
+    CardGetDTO create(CardCreateDTO cardCreateDTO, Authentication authentication);
 
     CardGetDTO getCardById(Integer id);
 

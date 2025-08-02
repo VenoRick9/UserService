@@ -14,13 +14,18 @@ import by.baraznov.userservice.utils.CardAlreadyExist;
 import by.baraznov.userservice.utils.CardNotFound;
 import by.baraznov.userservice.utils.UserNotFound;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,19 +36,27 @@ public class CardInfoServiceImpl implements CardInfoService {
     private final CardGetDTOMapper cardGetDTOMapper;
     private final CardUpdateDTOMapper cardUpdateDTOMapper;
     private final CardCreateDTOMapper cardCreateDTOMapper;
+    private final CacheManager cacheManager;
 
     @Override
     @Transactional
-    public CardGetDTO create(CardCreateDTO cardCreateDTO) {
-        if (cardCreateDTO.userId() == null) {
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+            }
+    )
+    public CardGetDTO create(CardCreateDTO cardCreateDTO, Authentication authentication) {
+        Integer userId = (Integer) authentication.getPrincipal();
+        if (userId == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
         if (cardInfoRepository.existsByNumber(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");
         }
-        cardInfo.setUser(userRepository.findById(cardCreateDTO.userId())
-                .orElseThrow(() -> new UserNotFound("User with id " + cardCreateDTO.userId() + " doesn't exist")));
+        cardInfo.setUser(userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFound("User with id " + userId + " doesn't exist")));
         cardInfoRepository.save(cardInfo);
         return cardGetDTOMapper.toDto(cardInfo);
     }
@@ -75,6 +88,12 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
+                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+            }
+    )
     public CardGetDTO update(CardUpdateDTO cardUpdateDTO, Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -91,6 +110,7 @@ public class CardInfoServiceImpl implements CardInfoService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "allUsers", allEntries = true)
     public void delete(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -98,6 +118,11 @@ public class CardInfoServiceImpl implements CardInfoService {
         if (!cardInfoRepository.existsById(id)) {
             throw new CardNotFound("Card with id " + id + " doesn't exist");
         }
+        CardInfo card = cardInfoRepository.findById(id)
+                .orElseThrow(() -> new CardNotFound("Card with id " + id + " doesn't exist"));
+
+        Integer userId = card.getUser().getId();
         cardInfoRepository.deleteById(id);
+        Objects.requireNonNull(cacheManager.getCache("user")).evict(userId);
     }
 }
