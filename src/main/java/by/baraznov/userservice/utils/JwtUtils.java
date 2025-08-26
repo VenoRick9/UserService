@@ -1,20 +1,35 @@
 package by.baraznov.userservice.utils;
 
-
-import by.baraznov.userservice.models.JwtAuthentication;
 import io.jsonwebtoken.Claims;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class JwtUtils {
+import javax.crypto.SecretKey;
+import java.security.Key;
+@Component
+public class JwtUtils {
 
-    public static JwtAuthentication generate(Claims claims) {
-        final JwtAuthentication jwtInfoToken = new JwtAuthentication();
-        jwtInfoToken.setLogin(claims.get("login", String.class));
-        jwtInfoToken.setUserId(Integer.valueOf(claims.getSubject()));
-        return jwtInfoToken;
+    private final SecretKey jwtAccessSecret;
+
+    public JwtUtils(
+            @Value("${jwt.secret.access}") String jwtAccessSecret
+    ) {
+        this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
     }
 
+    public Claims getAccessClaims(String token) {
+        return getClaims(token, jwtAccessSecret);
+    }
+
+    private Claims getClaims(String token, Key secret) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
 }

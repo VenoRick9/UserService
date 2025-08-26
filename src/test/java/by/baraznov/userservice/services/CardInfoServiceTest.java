@@ -13,6 +13,8 @@ import by.baraznov.userservice.repositories.UserRepository;
 import by.baraznov.userservice.services.impl.CardInfoServiceImpl;
 import by.baraznov.userservice.utils.CardAlreadyExist;
 import by.baraznov.userservice.utils.CardNotFound;
+import by.baraznov.userservice.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -57,6 +58,8 @@ class CardInfoServiceTest {
     private CardInfoServiceImpl cardService;
     @Mock
     private CacheManager cacheManager;
+    @Mock
+    private JwtUtils jwtUtils;
 
     @Test
     public void test_getAllCards() {
@@ -141,8 +144,12 @@ class CardInfoServiceTest {
                 LocalDate.of(2030, 1, 1), user);
         CardGetDTO getDTO = new CardGetDTO(1, user.getId(), "1234567890123456", "JOHN DOE",
                 LocalDate.of(2030, 1, 1));
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(1);
+        String authentication = "Bearer fake.jwt.token";
+        String token = authentication.substring(7);
+        Claims claims = mock(Claims.class);
+        when(claims.getSubject()).thenReturn(String.valueOf(1));
+
+        when(jwtUtils.getAccessClaims(token)).thenReturn(claims);
         when(cardCreateDTOMapper.toEntity(createDTO)).thenReturn(cardInfo);
         when(cardInfoRepository.existsByNumber(cardInfo.getNumber())).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -212,9 +219,12 @@ class CardInfoServiceTest {
     public void test_createCard_shouldThrowCardAlreadyExist() {
         Integer userId = 1;
         String cardNumber = "1234 5678 9012 3456";
+        String authentication = "Bearer fake.jwt.token";
+        String token = authentication.substring(7);
+        Claims claims = mock(Claims.class);
+        when(claims.getSubject()).thenReturn(String.valueOf(userId));
 
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(userId);
+        when(jwtUtils.getAccessClaims(token)).thenReturn(claims);
 
         CardCreateDTO cardCreateDTO = new CardCreateDTO(cardNumber, "JOHN FOG", LocalDate.now());
         CardInfo cardInfo = new CardInfo();

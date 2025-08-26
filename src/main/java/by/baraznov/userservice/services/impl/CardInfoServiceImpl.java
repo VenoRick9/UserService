@@ -12,14 +12,15 @@ import by.baraznov.userservice.repositories.UserRepository;
 import by.baraznov.userservice.services.CardInfoService;
 import by.baraznov.userservice.utils.CardAlreadyExist;
 import by.baraznov.userservice.utils.CardNotFound;
+import by.baraznov.userservice.utils.JwtUtils;
 import by.baraznov.userservice.utils.UserNotFound;
+import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class CardInfoServiceImpl implements CardInfoService {
     private final CardUpdateDTOMapper cardUpdateDTOMapper;
     private final CardCreateDTOMapper cardCreateDTOMapper;
     private final CacheManager cacheManager;
+    private final JwtUtils jwtUtils;
 
     @Override
     @Transactional
@@ -46,11 +48,11 @@ public class CardInfoServiceImpl implements CardInfoService {
                     @CacheEvict(cacheNames = "allUsers", allEntries = true)
             }
     )
-    public CardGetDTO create(CardCreateDTO cardCreateDTO, Authentication authentication) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        if (userId == null) {
-            throw new IllegalArgumentException("Id cannot be null");
-        }
+    public CardGetDTO create(CardCreateDTO cardCreateDTO, String authentication) {
+        String token = authentication.startsWith("Bearer ") ?
+                authentication.substring(7) : authentication;
+        Claims claims = jwtUtils.getAccessClaims(token);
+        Integer userId = Integer.valueOf(claims.getSubject());
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
         if (cardInfoRepository.existsByNumber(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");

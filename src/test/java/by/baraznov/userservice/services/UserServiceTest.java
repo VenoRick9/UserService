@@ -10,7 +10,6 @@ import by.baraznov.userservice.models.User;
 import by.baraznov.userservice.repositories.UserRepository;
 import by.baraznov.userservice.services.impl.UserServiceImpl;
 import by.baraznov.userservice.utils.EmailAlreadyExist;
-import by.baraznov.userservice.utils.UserAlreadyExist;
 import by.baraznov.userservice.utils.UserNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -148,14 +145,12 @@ class UserServiceTest {
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO getDTO = new UserGetDTO(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(1);
         when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(savedUser);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         when(userGetDTOMapper.toDto(userCaptor.capture())).thenReturn(getDTO);
 
-        UserGetDTO result = userService.create(createDTO, authentication);
+        UserGetDTO result = userService.create(createDTO);
 
         assertEquals(getDTO, result);
         User capturedUser = userCaptor.getValue();
@@ -222,38 +217,15 @@ class UserServiceTest {
         UserCreateDTO createDTO = new UserCreateDTO("John", "Doe", LocalDate.of(1990, 1, 1), email);
         User user = new User(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
 
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(userId);
-
         when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
-        when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user)); // <- email exists
+        when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));
 
-        assertThrows(EmailAlreadyExist.class, () -> userService.create(createDTO, authentication));
+        assertThrows(EmailAlreadyExist.class, () -> userService.create(createDTO));
 
         verify(userRepository).findUserByEmail(email);
         verify(userCreateDTOMapper).toEntity(createDTO);
         verifyNoMoreInteractions(userRepository);
     }
-    @Test
-    public void test_createUser_shouldThrowUserAlreadyExist() {
-        Integer userId = 1;
-        String email = "new@example.com";
-        UserCreateDTO createDTO = new UserCreateDTO("John", "Doe", LocalDate.of(1990, 1, 1), email);
-        User user = new User(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
 
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(userId);
-
-        when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
-        when(userRepository.findUserByEmail(email)).thenReturn(Optional.empty());
-        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-
-        assertThrows(UserAlreadyExist.class, () -> userService.create(createDTO, authentication));
-
-        verify(userRepository).findUserByEmail(email);
-        verify(userRepository).findById(userId);
-        verify(userCreateDTOMapper).toEntity(createDTO);
-        verifyNoMoreInteractions(userRepository);
-    }
 
 }

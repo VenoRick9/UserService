@@ -57,7 +57,6 @@ class CardInfoControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
 
         user = User.builder()
-                .id(1)
                 .name("Test")
                 .surname("User")
                 .email("test.user@example.com")

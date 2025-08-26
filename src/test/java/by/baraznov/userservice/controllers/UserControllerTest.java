@@ -61,7 +61,6 @@ class UserControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
         stringRedisTemplate.getConnectionFactory().getConnection().flushAll();
         user1 = User.builder()
-                .id(1)
                 .name("John")
                 .surname("Doe")
                 .birthDate(LocalDate.of(1990, 1, 1))
@@ -70,7 +69,6 @@ class UserControllerTest {
                 .build();
 
         user2 = User.builder()
-                .id(2)
                 .name("Alice")
                 .surname("Smith")
                 .birthDate(LocalDate.of(1985, 5, 20))
