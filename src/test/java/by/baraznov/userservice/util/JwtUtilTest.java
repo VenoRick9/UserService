@@ -1,6 +1,6 @@
 package by.baraznov.userservice.util;
 
-import by.baraznov.userservice.models.User;
+import by.baraznov.userservice.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
