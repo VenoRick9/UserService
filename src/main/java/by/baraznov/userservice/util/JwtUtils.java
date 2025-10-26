@@ -3,6 +3,7 @@ package by.baraznov.userservice.util;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.SignedJWT;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class JwtUtils {
 
     @Value("${keycloak.url}")
-    private static String JWKS_URL;
+    private String JWKS_URL;
 
     private JWKSet jwkSet;
     private Instant jwkSetExpiry;
@@ -41,6 +43,8 @@ public class JwtUtils {
 
             SignedJWT signedJWT = SignedJWT.parse(token);
             String kid = signedJWT.getHeader().getKeyID();
+            log.debug(kid);
+            log.debug(String.valueOf(signedJWT));
             JWK jwk = jwkSet.getKeyByKeyId(kid);
             if (jwk == null) {
                 this.jwkSet = JWKSet.load(new URL(JWKS_URL));
@@ -49,6 +53,8 @@ public class JwtUtils {
                     throw new RuntimeException("Public key not found for kid: " + kid);
                 }
             }
+
+            log.debug(String.valueOf(jwk));
             return UUID.fromString(signedJWT.getJWTClaimsSet().getSubject());
         } catch (ParseException | IOException e) {
             throw new RuntimeException("JWT validation failed", e);
