@@ -14,7 +14,6 @@ import by.baraznov.userservice.util.CardAlreadyExist;
 import by.baraznov.userservice.util.CardNotFound;
 import by.baraznov.userservice.util.JwtUtils;
 import by.baraznov.userservice.util.UserNotFound;
-import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,8 +51,7 @@ public class CardInfoServiceImpl implements CardInfoService {
     public CardGetDTO create(CardCreateDTO cardCreateDTO, String authentication) {
         String token = authentication.startsWith("Bearer ") ?
                 authentication.substring(7) : authentication;
-        Claims claims = jwtUtils.getAccessClaims(token);
-        UUID userId = UUID.fromString(claims.getSubject());
+        UUID userId = jwtUtils.getAccessClaims(token);
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
         if (cardInfoRepository.existsByNumber(cardInfo.getNumber())) {
             throw new CardAlreadyExist("Card number " + cardInfo.getNumber() + " already exist");

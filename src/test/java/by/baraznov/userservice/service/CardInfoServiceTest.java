@@ -14,7 +14,6 @@ import by.baraznov.userservice.service.impl.CardInfoServiceImpl;
 import by.baraznov.userservice.util.CardAlreadyExist;
 import by.baraznov.userservice.util.CardNotFound;
 import by.baraznov.userservice.util.JwtUtils;
-import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -154,10 +153,8 @@ class CardInfoServiceTest {
                 LocalDate.of(2030, 1, 1));
         String authentication = "Bearer fake.jwt.token";
         String token = authentication.substring(7);
-        Claims claims = mock(Claims.class);
-        when(claims.getSubject()).thenReturn(userId.toString());
 
-        when(jwtUtils.getAccessClaims(token)).thenReturn(claims);
+        when(jwtUtils.getAccessClaims(token)).thenReturn(userId);
         when(cardCreateDTOMapper.toEntity(createDTO)).thenReturn(cardInfo);
         when(cardInfoRepository.existsByNumber(cardInfo.getNumber())).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -230,10 +227,8 @@ class CardInfoServiceTest {
         String cardNumber = "1234 5678 9012 3456";
         String authentication = "Bearer fake.jwt.token";
         String token = authentication.substring(7);
-        Claims claims = mock(Claims.class);
-        when(claims.getSubject()).thenReturn(userId.toString());
 
-        when(jwtUtils.getAccessClaims(token)).thenReturn(claims);
+        when(jwtUtils.getAccessClaims(token)).thenReturn(userId);
 
         CardCreateDTO cardCreateDTO = new CardCreateDTO(cardNumber, "JOHN FOG", LocalDate.now());
         CardInfo cardInfo = new CardInfo();

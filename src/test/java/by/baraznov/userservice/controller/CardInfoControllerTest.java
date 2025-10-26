@@ -6,11 +6,14 @@ import by.baraznov.userservice.model.User;
 import by.baraznov.userservice.repository.CardInfoRepository;
 import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.util.JwtUtilTest;
+import by.baraznov.userservice.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,6 +49,8 @@ class CardInfoControllerTest {
     private UserRepository userRepository;
     @Autowired
     private JwtUtilTest testJwtUtil;
+    @MockBean
+    private JwtUtils jwtUtils;
 
     private String token;
 
@@ -82,6 +87,8 @@ class CardInfoControllerTest {
 
         cardInfoRepository.saveAll(List.of(card1, card2));
         token = testJwtUtil.generateToken(user);
+        Mockito.when(jwtUtils.getAccessClaims(Mockito.anyString()))
+                .thenReturn(userId);
     }
 
     @Test
