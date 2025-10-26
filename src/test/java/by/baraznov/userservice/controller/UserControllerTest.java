@@ -4,12 +4,14 @@ import by.baraznov.userservice.config.TestContainersConfig;
 import by.baraznov.userservice.model.User;
 import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.util.JwtUtilTest;
+import by.baraznov.userservice.util.JwtUtils;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
@@ -52,6 +54,8 @@ class UserControllerTest {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private JwtUtilTest testJwtUtil;
+    @MockBean
+    private JwtUtils jwtUtils;
 
     private User user1, user2;
     private String token;
