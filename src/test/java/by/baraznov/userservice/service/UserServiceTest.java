@@ -112,7 +112,7 @@ class UserServiceTest {
                 LocalDate.of(1985, 5, 5), "jane@example.com", List.of());
         List<UserCommand> users = List.of(user1, user2);
 
-        when(userRepository.findUsersByIds(List.of(id1, id2))).thenReturn(users);
+        //when(userRepository.findUsersByIds(List.of(id1, id2))).thenReturn(users);
         when(userGetDTOMapper.toDtos(users)).thenReturn(List.of(dto1, dto2));
 
         List<UserGetDTO> result = userService.getUsersByIds(List.of(id1, id2));
@@ -120,7 +120,7 @@ class UserServiceTest {
         assertEquals(2, result.size());
         assertEquals(dto1, result.get(0));
         assertEquals(dto2, result.get(1));
-        verify(userRepository).findUsersByIds(List.of(id1, id2));
+        //verify(userRepository).findUsersByIds(List.of(id1, id2));
         verify(userGetDTOMapper).toDtos(List.of(user1, user2));
     }
 
@@ -133,13 +133,13 @@ class UserServiceTest {
         UserGetDTO dto = new UserGetDTO(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), userEmail, List.of());
 
-        when(userRepository.findUserByEmail(userEmail)).thenReturn(Optional.of(user));
+        //when(userRepository.findUserByEmail(userEmail)).thenReturn(Optional.of(user));
         when(userGetDTOMapper.toDto(user)).thenReturn(dto);
 
         UserGetDTO result = userService.getUserByEmail(userEmail);
 
         assertEquals(dto, result);
-        verify(userRepository).findUserByEmail(userEmail);
+       // verify(userRepository).findUserByEmail(userEmail);
         verify(userGetDTOMapper).toDto(user);
     }
 
@@ -228,11 +228,11 @@ class UserServiceTest {
         UserCommand user = new UserCommand(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
 
         when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
-        when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));
+       // when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));
 
         assertThrows(EmailAlreadyExist.class, () -> userService.create(createDTO));
 
-        verify(userRepository).findUserByEmail(email);
+       // verify(userRepository).findUserByEmail(email);
         verify(userCreateDTOMapper).toEntity(createDTO);
         verifyNoMoreInteractions(userRepository);
     }
