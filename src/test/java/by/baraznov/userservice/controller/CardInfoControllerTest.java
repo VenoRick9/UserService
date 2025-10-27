@@ -2,11 +2,11 @@ package by.baraznov.userservice.controller;
 
 import by.baraznov.userservice.config.TestContainersConfig;
 import by.baraznov.userservice.model.CardInfo;
-import by.baraznov.userservice.model.User;
 import by.baraznov.userservice.repository.CardInfoRepository;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.util.JwtUtilTest;
 import by.baraznov.userservice.util.JwtUtils;
+import by.baraznov.userservice.write.model.UserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,7 +46,7 @@ class CardInfoControllerTest {
     @Autowired
     private CardInfoRepository cardInfoRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserCommandRepository userRepository;
     @Autowired
     private JwtUtilTest testJwtUtil;
     @MockBean
@@ -54,7 +54,7 @@ class CardInfoControllerTest {
 
     private String token;
 
-    private User user;
+    private UserCommand user;
     private CardInfo card1, card2;
 
     @BeforeEach
@@ -62,7 +62,7 @@ class CardInfoControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE card_info RESTART IDENTITY CASCADE");
         jdbcTemplate.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
         UUID userId = UUID.randomUUID();
-        user = User.builder()
+        user = UserCommand.builder()
                 .id(userId)
                 .name("Test")
                 .surname("User")

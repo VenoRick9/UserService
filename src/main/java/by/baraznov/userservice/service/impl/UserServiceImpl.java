@@ -6,12 +6,11 @@ import by.baraznov.userservice.dto.user.UserUpdateDTO;
 import by.baraznov.userservice.mapper.user.UserCreateDTOMapper;
 import by.baraznov.userservice.mapper.user.UserGetDTOMapper;
 import by.baraznov.userservice.mapper.user.UserUpdateDTOMapper;
-import by.baraznov.userservice.model.User;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.service.UserService;
-import by.baraznov.userservice.util.EmailAlreadyExist;
 import by.baraznov.userservice.util.JwtUtils;
 import by.baraznov.userservice.util.UserNotFound;
+import by.baraznov.userservice.write.model.UserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +28,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+    private final UserCommandRepository userRepository;
     private final UserGetDTOMapper userGetDTOMapper;
     private final UserUpdateDTOMapper userUpdateDTOMapper;
     private final UserCreateDTOMapper userCreateDTOMapper;
@@ -47,10 +45,10 @@ public class UserServiceImpl implements UserService {
             }
     )
     public UserGetDTO create(UserCreateDTO userCreateDTO) {
-        User user = userCreateDTOMapper.toEntity(userCreateDTO);
-        if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
+        UserCommand user = userCreateDTOMapper.toEntity(userCreateDTO);
+        /*if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist("User with email " + user.getEmail() + " already exists");
-        }
+        }*/
         userRepository.save(user);
         return userGetDTOMapper.toDto(user);
     }
@@ -67,13 +65,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserGetDTO> getUsersByIds(List<UUID> ids) {
-        if (ids == null) {
+       /* if (ids == null) {
             throw new IllegalArgumentException("List with ids cannot be null");
         }
         if (ids.isEmpty()) {
             return Collections.emptyList();
         }
-        return userGetDTOMapper.toDtos(userRepository.findUsersByIds(ids));
+        return userGetDTOMapper.toDtos(userRepository.findUsersByIds(ids));*/
+        return null;
     }
 
     @Override
@@ -85,11 +84,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "user", key = "#email")
     public UserGetDTO getUserByEmail(String email) {
-        if (email == null) {
+        /*if (email == null) {
             throw new IllegalArgumentException("Email cannot be null");
         }
         return userGetDTOMapper.toDto(userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UserNotFound("User with email " + email + " doesn't exist")));
+                .orElseThrow(() -> new UserNotFound("User with email " + email + " doesn't exist")));*/
+        return null;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
-        User user = userRepository.findById(id)
+        UserCommand user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFound("User " + id + " doesn't exist"));
         userUpdateDTOMapper.merge(user, userUpdateDTO);
         userRepository.save(user);

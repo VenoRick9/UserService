@@ -1,15 +1,12 @@
-package by.baraznov.userservice.model;
+package by.baraznov.userservice.write.model;
 
+import by.baraznov.userservice.model.CardInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,24 +24,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class UserCommand {
     @Id
     @Column(name = "id")
     private UUID id;
     @Column(name = "name")
-    @Size(min = 2, max = 15, message = "The name must contain between 2 and 15 characters")
-    @NotBlank
     private String name;
     @Column(name = "surname")
-    @Size(min = 2, max = 25, message = "The surname must contain between 2 and 25 characters")
-    @NotBlank
     private String surname;
     @Column(name = "birth_date")
-    @NotNull
     private LocalDate birthDate;
     @Column(name = "email")
-    @Pattern(regexp = "^[A-Za-z0-9._-]+@[a-z]+\\.[a-z]+$", message = "Invalid mail format")
-    @NotBlank
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CardInfo> cards;

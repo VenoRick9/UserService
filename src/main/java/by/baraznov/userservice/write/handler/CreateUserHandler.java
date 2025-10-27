@@ -4,10 +4,11 @@ import by.baraznov.userservice.dto.user.UserGetDTO;
 import by.baraznov.userservice.mapper.user.UserCreateCommandMapper;
 import by.baraznov.userservice.mapper.user.UserGetDTOMapper;
 import by.baraznov.userservice.mediator.CommandHandler;
-import by.baraznov.userservice.model.User;
-import by.baraznov.userservice.repository.UserRepository;
+import by.baraznov.userservice.read.repository.UserQueryRepository;
 import by.baraznov.userservice.util.EmailAlreadyExist;
 import by.baraznov.userservice.write.command.CreateUserCommand;
+import by.baraznov.userservice.write.model.UserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -18,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @AllArgsConstructor
 public class CreateUserHandler implements CommandHandler<CreateUserCommand, UserGetDTO> {
-    private final UserRepository userRepository;
+    private final UserCommandRepository userRepository;
+    private final UserQueryRepository userQueryRepository;
     private final UserCreateCommandMapper userCreateCommandMapper;
     private final UserGetDTOMapper userGetDTOMapper;
 
@@ -33,8 +35,8 @@ public class CreateUserHandler implements CommandHandler<CreateUserCommand, User
             }
     )
     public UserGetDTO handle(CreateUserCommand command) {
-        User user = userCreateCommandMapper.toEntity(command);
-        if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
+        UserCommand user = userCreateCommandMapper.toEntity(command);
+        if (userQueryRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist("User with email " + user.getEmail() + " already exists");
         }
         userRepository.save(user);

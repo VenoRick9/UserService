@@ -6,6 +6,7 @@ import by.baraznov.userservice.dto.user.UserGetDTO;
 import by.baraznov.userservice.dto.user.UserUpdateDTO;
 import by.baraznov.userservice.mapper.user.CreateDTOCreateCommandMapper;
 import by.baraznov.userservice.mediator.Mediator;
+import by.baraznov.userservice.read.query.GetUserByEmailQuery;
 import by.baraznov.userservice.service.UserService;
 import by.baraznov.userservice.write.command.CreateUserCommand;
 import by.baraznov.userservice.write.command.DeleteUserCommand;
@@ -55,7 +56,7 @@ public class UserController {
 
     @GetMapping(params = "email")
     public ResponseEntity<UserGetDTO> getUserByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+        return ResponseEntity.ok(mediator.send(GetUserByEmailQuery.toQuery(email)));
     }
 
     @PostMapping
@@ -72,8 +73,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        DeleteUserCommand deleteUserCommand = DeleteUserCommand.toCommand(id);
-        mediator.send(deleteUserCommand);
+        mediator.send(DeleteUserCommand.toCommand(id));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

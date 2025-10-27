@@ -6,11 +6,11 @@ import by.baraznov.userservice.dto.user.UserUpdateDTO;
 import by.baraznov.userservice.mapper.user.UserCreateDTOMapper;
 import by.baraznov.userservice.mapper.user.UserGetDTOMapper;
 import by.baraznov.userservice.mapper.user.UserUpdateDTOMapper;
-import by.baraznov.userservice.model.User;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.service.impl.UserServiceImpl;
 import by.baraznov.userservice.util.EmailAlreadyExist;
 import by.baraznov.userservice.util.UserNotFound;
+import by.baraznov.userservice.write.model.UserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 class UserServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserCommandRepository userRepository;
 
     @Mock
     private UserGetDTOMapper userGetDTOMapper;
@@ -56,16 +56,16 @@ class UserServiceTest {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
 
-        User user1 = new User(id1, "John", "Doe",
+        UserCommand user1 = new UserCommand(id1, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
-        User user2 = new User(id2, "Jane", "Smith",
+        UserCommand user2 = new UserCommand(id2, "Jane", "Smith",
                 LocalDate.of(1985, 5, 5), "jane@example.com", List.of());
         UserGetDTO dto1 = new UserGetDTO(id1, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO dto2 = new UserGetDTO(id2, "Jane", "Smith",
                 LocalDate.of(1985, 5, 5), "jane@example.com", List.of());
-        List<User> users = List.of(user1, user2);
-        Page<User> userPage = new PageImpl<>(users, pageable, users.size());
+        List<UserCommand> users = List.of(user1, user2);
+        Page<UserCommand> userPage = new PageImpl<>(users, pageable, users.size());
 
         when(userRepository.findAll(pageable)).thenReturn(userPage);
         when(userGetDTOMapper.toDto(user1)).thenReturn(dto1);
@@ -84,7 +84,7 @@ class UserServiceTest {
     @Test
     public void test_getUserById() {
         UUID userId = UUID.randomUUID();
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO dto = new UserGetDTO(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
@@ -102,15 +102,15 @@ class UserServiceTest {
     public void test_getUsersByIds() {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
-        User user1 = new User(id1, "John", "Doe",
+        UserCommand user1 = new UserCommand(id1, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
-        User user2 = new User(id2, "Jane", "Smith",
+        UserCommand user2 = new UserCommand(id2, "Jane", "Smith",
                 LocalDate.of(1985, 5, 5), "jane@example.com", List.of());
         UserGetDTO dto1 = new UserGetDTO(id1, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO dto2 = new UserGetDTO(id2, "Jane", "Smith",
                 LocalDate.of(1985, 5, 5), "jane@example.com", List.of());
-        List<User> users = List.of(user1, user2);
+        List<UserCommand> users = List.of(user1, user2);
 
         when(userRepository.findUsersByIds(List.of(id1, id2))).thenReturn(users);
         when(userGetDTOMapper.toDtos(users)).thenReturn(List.of(dto1, dto2));
@@ -128,7 +128,7 @@ class UserServiceTest {
     public void test_getUserByEmail() {
         UUID userId = UUID.randomUUID();
         String userEmail = "john@example.com";
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), userEmail, List.of());
         UserGetDTO dto = new UserGetDTO(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), userEmail, List.of());
@@ -148,22 +148,22 @@ class UserServiceTest {
         UUID userId = UUID.randomUUID();
         UserCreateDTO createDTO = new UserCreateDTO(userId,"John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com");
-        User user = new User(null, "John", "Doe",
+        UserCommand user = new UserCommand(null, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
-        User savedUser = new User(userId, "John", "Doe",
+        UserCommand savedUser = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO getDTO = new UserGetDTO(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
 
         when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(savedUser);
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        ArgumentCaptor<UserCommand> userCaptor = ArgumentCaptor.forClass(UserCommand.class);
         when(userGetDTOMapper.toDto(userCaptor.capture())).thenReturn(getDTO);
 
         UserGetDTO result = userService.create(createDTO);
 
         assertEquals(getDTO, result);
-        User capturedUser = userCaptor.getValue();
+        UserCommand capturedUser = userCaptor.getValue();
         assertEquals("John", capturedUser.getName());
         assertEquals("Doe", capturedUser.getSurname());
         assertEquals("john@example.com", capturedUser.getEmail());
@@ -176,14 +176,14 @@ class UserServiceTest {
     public void test_updateUser() {
         UUID userId = UUID.randomUUID();
         UserUpdateDTO updateDTO = new UserUpdateDTO("Bridge", null, null, null);
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         UserGetDTO getDTO = new UserGetDTO(userId, "Bridge", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         doAnswer(invocation -> {
-            User u = invocation.getArgument(0);
+            UserCommand u = invocation.getArgument(0);
             u.setName("Bridge");
             return null;
         }).when(userUpdateDTOMapper).merge(eq(user), eq(updateDTO));
@@ -225,7 +225,7 @@ class UserServiceTest {
         UUID userId = UUID.randomUUID();
         String email = "existing@example.com";
         UserCreateDTO createDTO = new UserCreateDTO(userId,"John", "Doe", LocalDate.of(1990, 1, 1), email);
-        User user = new User(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
+        UserCommand user = new UserCommand(null, "John", "Doe", LocalDate.of(1990, 1, 1), email, List.of());
 
         when(userCreateDTOMapper.toEntity(createDTO)).thenReturn(user);
         when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));

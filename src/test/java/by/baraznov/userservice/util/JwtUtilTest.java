@@ -1,6 +1,6 @@
 package by.baraznov.userservice.util;
 
-import by.baraznov.userservice.model.User;
+import by.baraznov.userservice.write.model.UserCommand;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -21,7 +21,7 @@ public class JwtUtilTest {
     ) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
     }
-    public String generateToken(User user) {
+    public String generateToken(UserCommand user) {
         Instant expirationInstant = LocalDateTime.now()
                 .plusMinutes(10)
                 .atZone(ZoneId.systemDefault())

@@ -1,10 +1,10 @@
 package by.baraznov.userservice.controller;
 
 import by.baraznov.userservice.config.TestContainersConfig;
-import by.baraznov.userservice.model.User;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.util.JwtUtilTest;
 import by.baraznov.userservice.util.JwtUtils;
+import by.baraznov.userservice.write.model.UserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private UserRepository userRepository;
+    private UserCommandRepository userRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -57,7 +57,7 @@ class UserControllerTest {
     @MockBean
     private JwtUtils jwtUtils;
 
-    private User user1, user2;
+    private UserCommand user1, user2;
     private String token;
     private UUID userId1, userId2;
 
@@ -69,7 +69,7 @@ class UserControllerTest {
         userId1 = UUID.randomUUID();
         userId2 = UUID.randomUUID();
 
-        user1 = User.builder()
+        user1 = UserCommand.builder()
                 .id(userId1)
                 .name("John")
                 .surname("Doe")
@@ -78,7 +78,7 @@ class UserControllerTest {
                 .cards(List.of())
                 .build();
 
-        user2 = User.builder()
+        user2 = UserCommand.builder()
                 .id(userId2)
                 .name("Alice")
                 .surname("Smith")
@@ -162,7 +162,7 @@ class UserControllerTest {
     @Test
     public void test_createUser() throws Exception {
         UUID newUserId = UUID.randomUUID();
-        token = testJwtUtil.generateToken(User.builder().id(newUserId).build());
+        token = testJwtUtil.generateToken(UserCommand.builder().id(newUserId).build());
 
         String json = """
                 {

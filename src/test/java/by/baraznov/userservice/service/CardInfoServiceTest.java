@@ -7,13 +7,13 @@ import by.baraznov.userservice.mapper.card.CardCreateDTOMapper;
 import by.baraznov.userservice.mapper.card.CardGetDTOMapper;
 import by.baraznov.userservice.mapper.card.CardUpdateDTOMapper;
 import by.baraznov.userservice.model.CardInfo;
-import by.baraznov.userservice.model.User;
 import by.baraznov.userservice.repository.CardInfoRepository;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.service.impl.CardInfoServiceImpl;
 import by.baraznov.userservice.util.CardAlreadyExist;
 import by.baraznov.userservice.util.CardNotFound;
 import by.baraznov.userservice.util.JwtUtils;
+import by.baraznov.userservice.write.model.UserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,7 +48,7 @@ class CardInfoServiceTest {
     @Mock
     private CardInfoRepository cardInfoRepository;
     @Mock
-    private UserRepository userRepository;
+    private UserCommandRepository userRepository;
     @Mock
     private CardGetDTOMapper cardGetDTOMapper;
     @Mock
@@ -67,7 +67,7 @@ class CardInfoServiceTest {
         Pageable pageable = PageRequest.of(0, 2);
         UUID userId = UUID.randomUUID();
 
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         CardInfo card1 = new CardInfo(1, "1234567812345678", "JOHN DOE",
                 LocalDate.of(2030, 12, 31), user);
@@ -97,7 +97,7 @@ class CardInfoServiceTest {
     @Test
     void test_getCardById() {
         UUID userId = UUID.randomUUID();
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         CardInfo card = new CardInfo(1, "1234567890123456", "JOHN DOE",
                 LocalDate.of(2030, 1, 1), user);
@@ -116,7 +116,7 @@ class CardInfoServiceTest {
     @Test
     void test_getCardsByIds() {
         UUID userId = UUID.randomUUID();
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         CardInfo card1 = new CardInfo(1, "1111222233334444", "JOHN DOE",
                 LocalDate.of(2030, 1, 1), user);
@@ -141,7 +141,7 @@ class CardInfoServiceTest {
     @Test
     void test_createCard() {
         UUID userId = UUID.randomUUID();
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         CardCreateDTO createDTO = new CardCreateDTO("1234567890123456", "JOHN DOE",
                 LocalDate.of(2030, 1, 1));
@@ -175,7 +175,7 @@ class CardInfoServiceTest {
     void test_updateCard() {
         UUID userId = UUID.randomUUID();
         Integer cardId = 1;
-        User user = new User(userId, "John", "Doe",
+        UserCommand user = new UserCommand(userId, "John", "Doe",
                 LocalDate.of(1990, 1, 1), "john@example.com", List.of());
         CardUpdateDTO updateDTO = new CardUpdateDTO("9999888877776666", null, null);
         CardInfo existing = new CardInfo(1, "1234567890123456", "JOHN DOE",
@@ -206,7 +206,7 @@ class CardInfoServiceTest {
         Integer cardId = 1;
         UUID userId = UUID.randomUUID();
         CardInfo cardInfo = new CardInfo();
-        User user = new User();
+        UserCommand user = new UserCommand();
         user.setId(userId);
         cardInfo.setUser(user);
         when(cardInfoRepository.existsById(cardId)).thenReturn(true);

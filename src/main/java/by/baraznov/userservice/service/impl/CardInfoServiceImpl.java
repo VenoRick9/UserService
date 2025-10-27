@@ -8,12 +8,12 @@ import by.baraznov.userservice.mapper.card.CardGetDTOMapper;
 import by.baraznov.userservice.mapper.card.CardUpdateDTOMapper;
 import by.baraznov.userservice.model.CardInfo;
 import by.baraznov.userservice.repository.CardInfoRepository;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.service.CardInfoService;
 import by.baraznov.userservice.util.CardAlreadyExist;
 import by.baraznov.userservice.util.CardNotFound;
 import by.baraznov.userservice.util.JwtUtils;
 import by.baraznov.userservice.util.UserNotFound;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,7 +33,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CardInfoServiceImpl implements CardInfoService {
     private final CardInfoRepository cardInfoRepository;
-    private final UserRepository userRepository;
+    private final UserCommandRepository userRepository;
     private final CardGetDTOMapper cardGetDTOMapper;
     private final CardUpdateDTOMapper cardUpdateDTOMapper;
     private final CardCreateDTOMapper cardCreateDTOMapper;

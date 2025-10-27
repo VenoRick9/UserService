@@ -1,9 +1,9 @@
 package by.baraznov.userservice.write.handler;
 
 import by.baraznov.userservice.mediator.CommandHandler;
-import by.baraznov.userservice.repository.UserRepository;
 import by.baraznov.userservice.util.UserNotFound;
 import by.baraznov.userservice.write.command.DeleteUserCommand;
+import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @AllArgsConstructor
 public class DeleteUserHandler implements CommandHandler<DeleteUserCommand, Void> {
-    private final UserRepository userRepository;
+    private final UserCommandRepository userRepository;
 
     @Override
     @Transactional

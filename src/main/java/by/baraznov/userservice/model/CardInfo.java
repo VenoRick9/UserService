@@ -1,6 +1,7 @@
 package by.baraznov.userservice.model;
 
 
+import by.baraznov.userservice.write.model.UserCommand;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,5 +46,5 @@ public class CardInfo {
     private LocalDate expirationDate;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserCommand user;
 }
