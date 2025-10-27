@@ -4,7 +4,12 @@ import by.baraznov.userservice.dto.PageResponse;
 import by.baraznov.userservice.dto.user.UserCreateDTO;
 import by.baraznov.userservice.dto.user.UserGetDTO;
 import by.baraznov.userservice.dto.user.UserUpdateDTO;
+import by.baraznov.userservice.mapper.user.CreateDTOCreateCommandMapper;
+import by.baraznov.userservice.mediator.Mediator;
 import by.baraznov.userservice.service.UserService;
+import by.baraznov.userservice.write.command.CreateUserCommand;
+import by.baraznov.userservice.write.command.DeleteUserCommand;
+import by.baraznov.userservice.write.command.UpdateUserCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +34,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final Mediator mediator;
+    private final CreateDTOCreateCommandMapper createDTOCreateCommandMapper;
 
     @GetMapping
     public ResponseEntity<PageResponse<UserGetDTO>> getAllUsers(
@@ -53,17 +60,20 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserGetDTO> create(@RequestBody @Valid UserCreateDTO userCreateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userCreateDTO));
+        CreateUserCommand createUserCommand = createDTOCreateCommandMapper.toDto(userCreateDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mediator.send(createUserCommand));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserGetDTO> update(@RequestBody @Valid UserUpdateDTO userUpdateDTO, @PathVariable("id") UUID id) {
-        return ResponseEntity.ok(userService.update(userUpdateDTO, id));
+        UpdateUserCommand updateUserCommand = UpdateUserCommand.fromDTO(id, userUpdateDTO);
+        return ResponseEntity.ok(mediator.send(updateUserCommand));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        userService.delete(id);
+        DeleteUserCommand deleteUserCommand = DeleteUserCommand.toCommand(id);
+        mediator.send(deleteUserCommand);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
