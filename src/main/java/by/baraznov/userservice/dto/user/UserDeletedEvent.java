@@ -7,7 +7,7 @@ import java.util.UUID;
 @Builder
 public record UserDeletedEvent(
         UUID id
-) implements UserEvent {
+) implements Event {
     @Override
     public String eventType() {
         return "USER_DELETED";

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface UserQueryRepository extends MongoRepository<UserQuery, String> {
     Optional<UserQuery> findByEmail(String email);
     List<UserQuery> findByIdIn(List<String> ids);
+    Optional<UserQuery> findByCardsNumber(String number);
 }

@@ -1,6 +1,5 @@
 package by.baraznov.userservice.read.model;
 
-import by.baraznov.userservice.model.CardInfo;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +24,9 @@ public class UserQuery {
     private String surname;
     private String email;
     private LocalDate birthDate;
-    private List<CardInfo> cards;
+    private List<CardInfoQuery> cards;
+
+    public void addCard(CardInfoQuery card) {
+        this.cards.add(card);
+    }
 }

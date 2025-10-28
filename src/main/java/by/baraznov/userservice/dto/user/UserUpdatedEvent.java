@@ -12,7 +12,7 @@ public record UserUpdatedEvent(
         String surname,
         String email,
         LocalDate birthDate
-) implements UserEvent {
+) implements Event {
     @Override
     public String eventType() {
         return "USER_UPDATED";

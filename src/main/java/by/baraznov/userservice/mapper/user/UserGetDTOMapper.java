@@ -3,7 +3,7 @@ package by.baraznov.userservice.mapper.user;
 import by.baraznov.userservice.dto.card.CardGetDTO;
 import by.baraznov.userservice.dto.user.UserGetDTO;
 import by.baraznov.userservice.mapper.BaseMapper;
-import by.baraznov.userservice.model.CardInfo;
+import by.baraznov.userservice.write.model.CardInfoCommand;
 import by.baraznov.userservice.write.model.UserCommand;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,7 +19,7 @@ public interface UserGetDTOMapper extends BaseMapper<UserCommand, UserGetDTO> {
     @Mapping(target = "cards", source = "cards", qualifiedByName = "cardInfoToCardGetDTOList")
     UserGetDTO toDto(UserCommand user);
     @Named("cardInfoToCardGetDTO")
-    default CardGetDTO cardToCardGetDTO(CardInfo cardInfo) {
+    default CardGetDTO cardToCardGetDTO(CardInfoCommand cardInfo) {
         if ( cardInfo == null ) {
             return null;
         }
@@ -35,7 +35,7 @@ public interface UserGetDTOMapper extends BaseMapper<UserCommand, UserGetDTO> {
         return new CardGetDTO( id, userId, number, holder, expirationDate );
     }
     @Named("cardInfoToCardGetDTOList")
-    default List<CardGetDTO> cardToGetDTOList(List<CardInfo> cards) {
+    default List<CardGetDTO> cardToGetDTOList(List<CardInfoCommand> cards) {
         if (cards == null) return List.of();
         return cards.stream()
                 .map(this::cardToCardGetDTO)

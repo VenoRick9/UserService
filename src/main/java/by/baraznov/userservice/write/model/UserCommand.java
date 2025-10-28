@@ -1,6 +1,5 @@
 package by.baraznov.userservice.write.model;
 
-import by.baraznov.userservice.model.CardInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,5 +36,5 @@ public class UserCommand {
     @Column(name = "email")
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CardInfo> cards;
+    private List<CardInfoCommand> cards;
 }

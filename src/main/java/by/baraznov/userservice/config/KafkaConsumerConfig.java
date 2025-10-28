@@ -26,7 +26,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "group1");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "by.baraznov.userservice.dto.user");
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "by.baraznov.userservice.dto.*");
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
 
         return new DefaultKafkaConsumerFactory<>(props);

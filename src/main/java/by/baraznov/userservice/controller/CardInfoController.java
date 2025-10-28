@@ -4,7 +4,9 @@ import by.baraznov.userservice.dto.PageResponse;
 import by.baraznov.userservice.dto.card.CardCreateDTO;
 import by.baraznov.userservice.dto.card.CardGetDTO;
 import by.baraznov.userservice.dto.card.CardUpdateDTO;
+import by.baraznov.userservice.mediator.Mediator;
 import by.baraznov.userservice.service.CardInfoService;
+import by.baraznov.userservice.write.command.CreateCardCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CardInfoController {
     private final CardInfoService cardInfoService;
+    private final Mediator mediator;
 
     @GetMapping
     public ResponseEntity<PageResponse<CardGetDTO>> getAllCards(
@@ -49,7 +52,9 @@ public class CardInfoController {
     @PostMapping
     public ResponseEntity<CardGetDTO> create(@RequestBody @Valid CardCreateDTO cardCreateDTO,
                                              @RequestHeader("Authorization") String authentication) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(cardInfoService.create(cardCreateDTO, authentication));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mediator.send(
+                CreateCardCommand.toCommand(cardCreateDTO.number(),cardCreateDTO.holder(),
+                        cardCreateDTO.expirationDate(), authentication)));
     }
 
     @PatchMapping("/{id}")

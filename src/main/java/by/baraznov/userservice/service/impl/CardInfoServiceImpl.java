@@ -9,10 +9,8 @@ import by.baraznov.userservice.mapper.card.CardUpdateDTOMapper;
 import by.baraznov.userservice.model.CardInfo;
 import by.baraznov.userservice.repository.CardInfoRepository;
 import by.baraznov.userservice.service.CardInfoService;
-import by.baraznov.userservice.util.CardAlreadyExist;
 import by.baraznov.userservice.util.CardNotFound;
 import by.baraznov.userservice.util.JwtUtils;
-import by.baraznov.userservice.util.UserNotFound;
 import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
@@ -23,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -49,7 +46,7 @@ public class CardInfoServiceImpl implements CardInfoService {
             }
     )
     public CardGetDTO create(CardCreateDTO cardCreateDTO, String authentication) {
-        String token = authentication.startsWith("Bearer ") ?
+        /*String token = authentication.startsWith("Bearer ") ?
                 authentication.substring(7) : authentication;
         UUID userId = jwtUtils.getAccessClaims(token);
         CardInfo cardInfo = cardCreateDTOMapper.toEntity(cardCreateDTO);
@@ -59,32 +56,37 @@ public class CardInfoServiceImpl implements CardInfoService {
         cardInfo.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFound("User with id " + userId + " doesn't exist")));
         cardInfoRepository.save(cardInfo);
-        return cardGetDTOMapper.toDto(cardInfo);
+        return cardGetDTOMapper.toDto(cardInfo);*/
+        return null;
+
     }
 
     @Override
     public CardGetDTO getCardById(Integer id) {
-        if (id == null) {
+        /*if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         return cardGetDTOMapper.toDto(cardInfoRepository.findById(id)
-                .orElseThrow(() -> new CardNotFound("Card with id " + id + " doesn't exist")));
+                .orElseThrow(() -> new CardNotFound("Card with id " + id + " doesn't exist")));*/
+        return null;
     }
 
     @Override
     public List<CardGetDTO> getCardsByIds(List<Integer> ids) {
-        if (ids == null) {
-            throw new IllegalArgumentException("List with ids cannot be null");
-        }
-        if (ids.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return cardGetDTOMapper.toDtos(cardInfoRepository.findCardsByIds(ids));
+//        if (ids == null) {
+//            throw new IllegalArgumentException("List with ids cannot be null");
+//        }
+//        if (ids.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//        return cardGetDTOMapper.toDtos(cardInfoRepository.findCardsByIds(ids));
+        return null;
     }
 
     @Override
     public Page<CardGetDTO> getAllCards(Pageable pageable) {
-        return cardInfoRepository.findAll(pageable).map(cardGetDTOMapper::toDto);
+        //return cardInfoRepository.findAll(pageable).map(cardGetDTOMapper::toDto);
+        return null;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class CardInfoServiceImpl implements CardInfoService {
             }
     )
     public CardGetDTO update(CardUpdateDTO cardUpdateDTO, Integer id) {
-        if (id == null) {
+        /*if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         CardInfo cardInfo = cardInfoRepository.findById(id)
@@ -106,7 +108,8 @@ public class CardInfoServiceImpl implements CardInfoService {
         }
         cardUpdateDTOMapper.merge(cardInfo, cardUpdateDTO);
         cardInfoRepository.save(cardInfo);
-        return cardGetDTOMapper.toDto(cardInfo);
+        return cardGetDTOMapper.toDto(cardInfo);*/
+        return null;
     }
 
     @Override
