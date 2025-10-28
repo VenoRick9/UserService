@@ -40,8 +40,8 @@ public class CreateCardHandler implements CommandHandler<CreateCardCommand, Card
     public CardGetDTO handle(CreateCardCommand command) {
         String token = command.token().startsWith("Bearer ") ?
                 command.token().substring(7) : command.token();
-        UUID userId = UUID.fromString("5ce6aa4f-ae05-4cdb-be74-16f3bc38553f");
-                //jwtUtils.getAccessClaims(token);
+        UUID userId = UUID.fromString("41bde0fe-bc90-4e5c-859d-dabbde4ff10a");
+                //jwtUtils.getAccessClaims(token);//TODO
         CardInfoCommand cardInfo = cardCreateCommandMapper.toEntity(command);
 
         if(userQueryRepository.findByCardsNumber(cardInfo.getNumber()).isPresent()){

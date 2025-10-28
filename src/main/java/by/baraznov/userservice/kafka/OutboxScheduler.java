@@ -30,6 +30,8 @@ public class OutboxScheduler {
                     case "USER_UPDATED" -> "USER_UPDATED_TOPIC";
                     case "USER_DELETED" -> "USER_DELETED_TOPIC";
                     case "CARD_CREATED" -> "CARD_CREATED_TOPIC";
+                    case "CARD_UPDATED" -> "CARD_UPDATED_TOPIC";
+                    case "CARD_DELETED" -> "CARD_DELETED_TOPIC";
                     default -> throw new IllegalArgumentException("Unknown event type: " + event.getEventType());
                 };
                 kafkaTemplate.send(topic, event.getPayload());

@@ -7,6 +7,8 @@ import by.baraznov.userservice.dto.card.CardUpdateDTO;
 import by.baraznov.userservice.mediator.Mediator;
 import by.baraznov.userservice.service.CardInfoService;
 import by.baraznov.userservice.write.command.CreateCardCommand;
+import by.baraznov.userservice.write.command.DeleteCardCommand;
+import by.baraznov.userservice.write.command.UpdateCardCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -60,12 +62,13 @@ public class CardInfoController {
     @PatchMapping("/{id}")
     public ResponseEntity<CardGetDTO> update(@RequestBody @Valid CardUpdateDTO cardUpdateDTO,
                                              @PathVariable("id") int id) {
-        return ResponseEntity.ok(cardInfoService.update(cardUpdateDTO, id));
+        return ResponseEntity.ok(mediator.send(UpdateCardCommand.toCommand(id, cardUpdateDTO.number(),
+                cardUpdateDTO.holder(), cardUpdateDTO.expirationDate())));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
-        cardInfoService.delete(id);
+        mediator.send(DeleteCardCommand.toCommand(id));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
