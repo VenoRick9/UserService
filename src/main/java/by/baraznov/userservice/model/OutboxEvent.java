@@ -1,6 +1,6 @@
 package by.baraznov.userservice.model;
 
-import by.baraznov.userservice.dto.user.UserCreatedEvent;
+import by.baraznov.userservice.dto.user.UserEvent;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,7 +34,7 @@ public class OutboxEvent {
     private String eventType;
     @Type(JsonType.class)
     @Column(name = "payload", columnDefinition = "jsonb")
-    private UserCreatedEvent payload;
+    private UserEvent payload;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     private boolean processed;

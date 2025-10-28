@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Builder
-public record UserCreatedEvent(
+public record UserUpdatedEvent(
         UUID id,
         String name,
         String surname,
@@ -15,6 +15,6 @@ public record UserCreatedEvent(
 ) implements UserEvent {
     @Override
     public String eventType() {
-        return "USER_CREATED";
+        return "USER_UPDATED";
     }
 }

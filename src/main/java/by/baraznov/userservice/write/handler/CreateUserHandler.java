@@ -9,6 +9,7 @@ import by.baraznov.userservice.model.OutboxEvent;
 import by.baraznov.userservice.read.repository.UserQueryRepository;
 import by.baraznov.userservice.repository.OutboxRepository;
 import by.baraznov.userservice.util.EmailAlreadyExist;
+import by.baraznov.userservice.util.UserAlreadyExist;
 import by.baraznov.userservice.write.command.CreateUserCommand;
 import by.baraznov.userservice.write.model.UserCommand;
 import by.baraznov.userservice.write.repository.UserCommandRepository;
@@ -48,6 +49,9 @@ public class CreateUserHandler implements CommandHandler<CreateUserCommand, User
         UserCommand user = userCreateCommandMapper.toEntity(command);
         if (userQueryRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist("User with email " + user.getEmail() + " already exists");
+        }
+        if(userQueryRepository.findById(String.valueOf(user.getId())).isPresent()) {
+            throw new UserAlreadyExist("User with id " + user.getId() + " already exists");
         }
         userRepository.save(user);
         UserCreatedEvent event = UserCreatedEvent.builder()
