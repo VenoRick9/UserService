@@ -20,7 +20,6 @@ public class OutBoxEventListener {
 
     @KafkaListener(topics = "USER_CREATED_TOPIC", groupId = "group1", containerFactory = "kafkaListenerContainerFactory")
     public void onUserCreateEvent(UserEvent message) {
-        System.out.println("we are creating user");
         if (message instanceof UserCreatedEvent created) {
             handleUserCreated(created);
         }  else {
@@ -30,7 +29,6 @@ public class OutBoxEventListener {
 
     @KafkaListener(topics = "USER_UPDATED_TOPIC", groupId = "group1", containerFactory = "kafkaListenerContainerFactory")
     public void onUserUpdateEvent(UserEvent message) {
-        System.out.println("we are updating user");
         if (message instanceof UserUpdatedEvent updated) {
             handleUserUpdated(updated);
         }  else {
@@ -39,8 +37,6 @@ public class OutBoxEventListener {
     }
     @KafkaListener(topics = "USER_DELETED_TOPIC", groupId = "group1", containerFactory = "kafkaListenerContainerFactory")
     public void onUserDeleteEvent(UserEvent message) {
-        System.out.println("we are deleting user");
-        System.out.println(message);
         if (message instanceof UserDeletedEvent deleted) {
             handleUserDeleted(deleted);
         }  else {
