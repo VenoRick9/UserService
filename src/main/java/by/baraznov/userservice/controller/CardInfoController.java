@@ -5,6 +5,9 @@ import by.baraznov.userservice.dto.card.CardCreateDTO;
 import by.baraznov.userservice.dto.card.CardGetDTO;
 import by.baraznov.userservice.dto.card.CardUpdateDTO;
 import by.baraznov.userservice.mediator.Mediator;
+import by.baraznov.userservice.read.query.GetAllCardsQuery;
+import by.baraznov.userservice.read.query.GetCardByIdQuery;
+import by.baraznov.userservice.read.query.GetCardsByIdsQuery;
 import by.baraznov.userservice.service.CardInfoService;
 import by.baraznov.userservice.write.command.CreateCardCommand;
 import by.baraznov.userservice.write.command.DeleteCardCommand;
@@ -38,17 +41,17 @@ public class CardInfoController {
     @GetMapping
     public ResponseEntity<PageResponse<CardGetDTO>> getAllCards(
             @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(PageResponse.toPageResponse(cardInfoService.getAllCards(pageable)));
+        return ResponseEntity.ok(PageResponse.toPageResponse(mediator.send(GetAllCardsQuery.toQuery(pageable))));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CardGetDTO> getCardById(@PathVariable("id") int id) {
-        return ResponseEntity.ok(cardInfoService.getCardById(id));
+        return ResponseEntity.ok(mediator.send(GetCardByIdQuery.toQuery(id)));
     }
 
     @GetMapping(params = "ids")
     public ResponseEntity<List<CardGetDTO>> getCardsByIds(@RequestParam List<Integer> ids) {
-        return ResponseEntity.ok(cardInfoService.getCardsByIds(ids));
+        return ResponseEntity.ok(mediator.send(GetCardsByIdsQuery.toQuery(ids)));
     }
 
     @PostMapping

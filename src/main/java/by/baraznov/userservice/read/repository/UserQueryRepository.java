@@ -13,5 +13,6 @@ public interface UserQueryRepository extends MongoRepository<UserQuery, String> 
     List<UserQuery> findByIdIn(List<String> ids);
     Optional<UserQuery> findByCardsNumber(String number);
     Optional<UserQuery> findByCards_Id(Integer cardId);
+    List<UserQuery> findByCardsIdIn(List<Integer> cardIds);
 
 }
