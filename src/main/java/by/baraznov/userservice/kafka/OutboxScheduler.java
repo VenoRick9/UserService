@@ -1,6 +1,6 @@
 package by.baraznov.userservice.kafka;
 
-import by.baraznov.userservice.dto.user.Event;
+import by.baraznov.userservice.dto.Event;
 import by.baraznov.userservice.model.OutboxEvent;
 import by.baraznov.userservice.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;

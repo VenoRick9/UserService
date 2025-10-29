@@ -1,6 +1,6 @@
 package by.baraznov.userservice.dto.card;
 
-import by.baraznov.userservice.dto.user.Event;
+import by.baraznov.userservice.dto.Event;
 import lombok.Builder;
 
 import java.time.LocalDate;

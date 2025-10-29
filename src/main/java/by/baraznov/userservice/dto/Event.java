@@ -1,8 +1,11 @@
-package by.baraznov.userservice.dto.user;
+package by.baraznov.userservice.dto;
 
 import by.baraznov.userservice.dto.card.CardCreatedEvent;
 import by.baraznov.userservice.dto.card.CardDeletedEvent;
 import by.baraznov.userservice.dto.card.CardUpdateEvent;
+import by.baraznov.userservice.dto.user.UserCreatedEvent;
+import by.baraznov.userservice.dto.user.UserDeletedEvent;
+import by.baraznov.userservice.dto.user.UserUpdatedEvent;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 

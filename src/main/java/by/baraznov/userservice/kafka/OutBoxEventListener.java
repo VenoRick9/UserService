@@ -1,9 +1,9 @@
 package by.baraznov.userservice.kafka;
 
+import by.baraznov.userservice.dto.Event;
 import by.baraznov.userservice.dto.card.CardCreatedEvent;
 import by.baraznov.userservice.dto.card.CardDeletedEvent;
 import by.baraznov.userservice.dto.card.CardUpdateEvent;
-import by.baraznov.userservice.dto.user.Event;
 import by.baraznov.userservice.dto.user.UserCreatedEvent;
 import by.baraznov.userservice.dto.user.UserDeletedEvent;
 import by.baraznov.userservice.dto.user.UserUpdatedEvent;

@@ -8,7 +8,6 @@ import by.baraznov.userservice.mediator.Mediator;
 import by.baraznov.userservice.read.query.GetAllCardsQuery;
 import by.baraznov.userservice.read.query.GetCardByIdQuery;
 import by.baraznov.userservice.read.query.GetCardsByIdsQuery;
-import by.baraznov.userservice.service.CardInfoService;
 import by.baraznov.userservice.write.command.CreateCardCommand;
 import by.baraznov.userservice.write.command.DeleteCardCommand;
 import by.baraznov.userservice.write.command.UpdateCardCommand;
@@ -35,7 +34,6 @@ import java.util.List;
 @RequestMapping("/cards")
 @AllArgsConstructor
 public class CardInfoController {
-    private final CardInfoService cardInfoService;
     private final Mediator mediator;
 
     @GetMapping

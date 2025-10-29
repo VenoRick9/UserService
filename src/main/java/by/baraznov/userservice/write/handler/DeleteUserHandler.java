@@ -3,6 +3,7 @@ package by.baraznov.userservice.write.handler;
 import by.baraznov.userservice.dto.user.UserDeletedEvent;
 import by.baraznov.userservice.mediator.CommandHandler;
 import by.baraznov.userservice.model.OutboxEvent;
+import by.baraznov.userservice.read.repository.UserQueryRepository;
 import by.baraznov.userservice.repository.OutboxRepository;
 import by.baraznov.userservice.util.UserNotFound;
 import by.baraznov.userservice.write.command.DeleteUserCommand;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DeleteUserHandler implements CommandHandler<DeleteUserCommand, Void> {
     private final UserCommandRepository userRepository;
+    private final UserQueryRepository userQueryRepository;
     private final OutboxRepository outboxRepository;
 
     @Override
@@ -34,7 +36,7 @@ public class DeleteUserHandler implements CommandHandler<DeleteUserCommand, Void
         if (command.id() == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
-        if (!userRepository.existsById(command.id())) {
+        if (!userQueryRepository.existsById(String.valueOf(command.id()))) {
             throw new UserNotFound("User with id " + command.id() + " doesn't exist");
         }
         UserDeletedEvent event = UserDeletedEvent.builder()

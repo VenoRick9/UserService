@@ -1,6 +1,6 @@
 package by.baraznov.userservice.model;
 
-import by.baraznov.userservice.dto.user.Event;
+import by.baraznov.userservice.dto.Event;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

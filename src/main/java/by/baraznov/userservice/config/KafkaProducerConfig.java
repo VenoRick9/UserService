@@ -1,6 +1,6 @@
 package by.baraznov.userservice.config;
 
-import by.baraznov.userservice.dto.user.Event;
+import by.baraznov.userservice.dto.Event;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

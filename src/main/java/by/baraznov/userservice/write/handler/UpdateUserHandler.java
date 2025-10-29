@@ -3,9 +3,12 @@ package by.baraznov.userservice.write.handler;
 import by.baraznov.userservice.dto.user.UserGetDTO;
 import by.baraznov.userservice.dto.user.UserUpdatedEvent;
 import by.baraznov.userservice.mapper.user.UserGetDTOMapper;
+import by.baraznov.userservice.mapper.user.UserQueryToCommandMapper;
 import by.baraznov.userservice.mapper.user.UserUpdateCommandMapper;
 import by.baraznov.userservice.mediator.CommandHandler;
 import by.baraznov.userservice.model.OutboxEvent;
+import by.baraznov.userservice.read.model.UserQuery;
+import by.baraznov.userservice.read.repository.UserQueryRepository;
 import by.baraznov.userservice.repository.OutboxRepository;
 import by.baraznov.userservice.util.UserNotFound;
 import by.baraznov.userservice.write.command.UpdateUserCommand;
@@ -25,9 +28,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UpdateUserHandler implements CommandHandler<UpdateUserCommand, UserGetDTO> {
     private final UserCommandRepository userRepository;
-    private final UserUpdateCommandMapper userUpdateCommandMapper;
-    private final UserGetDTOMapper userGetDTOMapper;
+    private final UserQueryRepository userQueryRepository;
     private final OutboxRepository outboxRepository;
+    private final UserUpdateCommandMapper userUpdateCommandMapper;
+    private final UserQueryToCommandMapper userQueryToCommandMapper;
+    private final UserGetDTOMapper userGetDTOMapper;
+
     @Override
     @Transactional
     @Caching(
@@ -43,8 +49,9 @@ public class UpdateUserHandler implements CommandHandler<UpdateUserCommand, User
         if (userUpdateEntity.getId() == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
-        UserCommand user = userRepository.findById(userUpdateEntity.getId())
+        UserQuery userQuery = userQueryRepository.findById(String.valueOf(userUpdateEntity.getId()))
                 .orElseThrow(() -> new UserNotFound("User " + userUpdateEntity.getId() + " doesn't exist"));
+        UserCommand user = userQueryToCommandMapper.toDto(userQuery);
         userUpdateCommandMapper.merge(user, command);
         user =  userRepository.save(user);
         UserUpdatedEvent event = UserUpdatedEvent.builder()

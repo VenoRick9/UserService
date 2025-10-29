@@ -24,9 +24,7 @@ public class GetAllCardsQueryHandler implements QueryHandler<GetAllCardsQuery, P
     @Override
     public Page<CardGetDTO> handle(GetAllCardsQuery query) {
         Pageable pageable = query.pageable();
-
         List<UserQuery> users = userQueryRepository.findAll();
-
         List<CardGetDTO> allCards = users.stream()
                 .flatMap(user -> user.getCards().stream())
                 .map(card -> CardGetDTO.builder()
@@ -38,12 +36,9 @@ public class GetAllCardsQueryHandler implements QueryHandler<GetAllCardsQuery, P
                         .build()
                 )
                 .collect(Collectors.toList());
-
         int start = Math.min((int) pageable.getOffset(), allCards.size());
         int end = Math.min(start + pageable.getPageSize(), allCards.size());
-
         List<CardGetDTO> pageContent = allCards.subList(start, end);
-
         return new PageImpl<>(pageContent, pageable, allCards.size());
     }
 

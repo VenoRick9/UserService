@@ -31,9 +31,10 @@ import java.util.UUID;
 public class CreateUserHandler implements CommandHandler<CreateUserCommand, UserGetDTO> {
     private final UserCommandRepository userRepository;
     private final UserQueryRepository userQueryRepository;
+    private final OutboxRepository outboxRepository;
     private final UserCreateCommandMapper userCreateCommandMapper;
     private final UserGetDTOMapper userGetDTOMapper;
-    private final OutboxRepository outboxRepository;
+
 
     @Override
     @Transactional
