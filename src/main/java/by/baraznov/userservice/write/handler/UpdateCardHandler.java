@@ -19,8 +19,6 @@ import by.baraznov.userservice.write.command.UpdateCardCommand;
 import by.baraznov.userservice.write.model.CardInfoCommand;
 import by.baraznov.userservice.write.repository.CardInfoCommandRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,12 +42,13 @@ public class UpdateCardHandler implements CommandHandler<UpdateCardCommand, Card
 
     @Override
     @Transactional
-    @Caching(
-            evict = {
-                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
-                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
-            }
-    )
+//    @Caching(
+//            evict = {
+//                    @CacheEvict(cacheNames = "user", key = "T(String).valueOf(#result.userId())"),
+//                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+//            }
+//    )
+   // @CacheEvict(cacheNames = "allUsers", allEntries = true)
     public CardGetDTO handle(UpdateCardCommand command) {
         if (command.id() == null) {
             throw new IllegalArgumentException("Id cannot be null");

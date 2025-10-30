@@ -9,8 +9,6 @@ import by.baraznov.userservice.util.UserNotFound;
 import by.baraznov.userservice.write.command.DeleteUserCommand;
 import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +24,12 @@ public class DeleteUserHandler implements CommandHandler<DeleteUserCommand, Void
 
     @Override
     @Transactional
-    @Caching(
-            evict = {
-                    @CacheEvict(cacheNames = "user", key = "#command.id()"),
-                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
-            }
-    )
+//    @Caching(
+//            evict = {
+//                    @CacheEvict(cacheNames = "user", key = "T(String).valueOf(#command.id())"),
+//                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+//            }
+//    )
     public Void handle(DeleteUserCommand command) {
         if (command.id() == null) {
             throw new IllegalArgumentException("Id cannot be null");

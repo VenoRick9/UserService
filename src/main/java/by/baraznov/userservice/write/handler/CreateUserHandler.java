@@ -14,9 +14,6 @@ import by.baraznov.userservice.write.command.CreateUserCommand;
 import by.baraznov.userservice.write.model.UserCommand;
 import by.baraznov.userservice.write.repository.UserCommandRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +35,14 @@ public class CreateUserHandler implements CommandHandler<CreateUserCommand, User
 
     @Override
     @Transactional
-    @Caching(
-            evict = {
-                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
-            },
-            put = {
-                    @CachePut(cacheNames = "user", key = "#result.id()")
-            }
-    )
+//    @Caching(
+//            evict = {
+//                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+//            },
+//            put = {
+//                    @CachePut(cacheNames = "user", key = "T(String).valueOf(#result.id())")
+//            }
+//    )
     public UserGetDTO handle(CreateUserCommand command) {
         UserCommand user = userCreateCommandMapper.toEntity(command);
         if (userQueryRepository.findByEmail(user.getEmail()).isPresent()) {

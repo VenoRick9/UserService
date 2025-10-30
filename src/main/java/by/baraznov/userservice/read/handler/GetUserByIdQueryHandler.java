@@ -7,7 +7,6 @@ import by.baraznov.userservice.read.query.GetUserByIdQuery;
 import by.baraznov.userservice.read.repository.UserQueryRepository;
 import by.baraznov.userservice.util.UserNotFound;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +16,7 @@ public class GetUserByIdQueryHandler implements QueryHandler<GetUserByIdQuery, U
     private final UserQueryUserGetDTOMapper userQueryUserGetDTOMapper;
 
     @Override
-    @Cacheable(value = "user", key = "#query.id()")
+    //@Cacheable(value = "user", key = "#query.id()")
     public UserGetDTO handle(GetUserByIdQuery query) {
         if (query.id() == null) {
             throw new IllegalArgumentException("Id cannot be null");

@@ -11,7 +11,6 @@ import by.baraznov.userservice.util.UserNotFound;
 import by.baraznov.userservice.write.command.DeleteCardCommand;
 import by.baraznov.userservice.write.repository.CardInfoCommandRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,7 @@ public class DeleteCardHandler implements CommandHandler<DeleteCardCommand, Void
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+    //@CacheEvict(cacheNames = "allUsers", allEntries = true)
     public Void handle(DeleteCardCommand command) {
         if (command.id() == null) {
             throw new IllegalArgumentException("Id cannot be null");

@@ -52,26 +52,7 @@
 
 
 services:
-  user-service:
-    build:
-      context: ./UserService
-      dockerfile: Dockerfile
-    container_name: user-service
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/user_service
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Postgres_9
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
-      SPRING_PROFILES_ACTIVE: docker
-    depends_on:
-      - postgres-user
-      - redis
-      - broker
-    networks:
-      - app-network
+
   postgres-user:
     image: postgres:13
     container_name: postgres-user

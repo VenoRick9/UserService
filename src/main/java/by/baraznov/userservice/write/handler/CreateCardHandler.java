@@ -16,8 +16,6 @@ import by.baraznov.userservice.write.command.CreateCardCommand;
 import by.baraznov.userservice.write.model.CardInfoCommand;
 import by.baraznov.userservice.write.repository.CardInfoCommandRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +36,15 @@ public class CreateCardHandler implements CommandHandler<CreateCardCommand, Card
 
 
 
+
     @Override
     @Transactional
-    @Caching(
-            evict = {
-                    @CacheEvict(cacheNames = "user", key = "#result.userId()"),
-                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
-            }
-    )
+//    @Caching(
+//            evict = {
+//                    @CacheEvict(cacheNames = "user", key = "T(String).valueOf(#result.userId())"),
+//                    @CacheEvict(cacheNames = "allUsers", allEntries = true)
+//            }
+//    )
     public CardGetDTO handle(CreateCardCommand command) {
         String token = command.token().startsWith("Bearer ") ?
                 command.token().substring(7) : command.token();
@@ -74,13 +73,7 @@ public class CreateCardHandler implements CommandHandler<CreateCardCommand, Card
                 .createdAt(LocalDateTime.now())
                 .build();
         outboxRepository.save(outboxEvent);
+
         return cardGetDTOMapper.toDto(cardInfo);
-
-
-
-
-
-
-
     }
 }
