@@ -4,7 +4,15 @@ import by.baraznov.userservice.dto.PageResponse;
 import by.baraznov.userservice.dto.user.UserCreateDTO;
 import by.baraznov.userservice.dto.user.UserGetDTO;
 import by.baraznov.userservice.dto.user.UserUpdateDTO;
-import by.baraznov.userservice.service.UserService;
+import by.baraznov.userservice.mapper.user.CreateDTOCreateCommandMapper;
+import by.baraznov.userservice.mediator.Mediator;
+import by.baraznov.userservice.read.query.GetAllUsersQuery;
+import by.baraznov.userservice.read.query.GetUserByEmailQuery;
+import by.baraznov.userservice.read.query.GetUserByIdQuery;
+import by.baraznov.userservice.read.query.GetUsersByIdsQuery;
+import by.baraznov.userservice.write.command.CreateUserCommand;
+import by.baraznov.userservice.write.command.DeleteUserCommand;
+import by.baraznov.userservice.write.command.UpdateUserCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -28,42 +36,45 @@ import java.util.UUID;
 @RequestMapping("/users")
 @AllArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final Mediator mediator;
+    private final CreateDTOCreateCommandMapper createDTOCreateCommandMapper;
 
     @GetMapping
     public ResponseEntity<PageResponse<UserGetDTO>> getAllUsers(
             @PageableDefault(page = 0, size = 10, sort = {"id"}) Pageable pageable) {
-        return ResponseEntity.ok(PageResponse.toPageResponse(userService.getAllUsers(pageable)));
+        return ResponseEntity.ok(PageResponse.toPageResponse(mediator.send(GetAllUsersQuery.toQuery(pageable))));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserGetDTO> getUserById(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+        return ResponseEntity.ok(mediator.send(GetUserByIdQuery.toQuery(String.valueOf(id))));
     }
 
     @GetMapping(params = "ids")
-    public ResponseEntity<List<UserGetDTO>> getUsersByIds(@RequestParam List<UUID> ids) {
-        return ResponseEntity.ok(userService.getUsersByIds(ids));
+    public ResponseEntity<List<UserGetDTO>> getUsersByIds(@RequestParam List<String> ids) {
+        return ResponseEntity.ok(mediator.send(GetUsersByIdsQuery.toQuery(ids)));
     }
 
     @GetMapping(params = "email")
     public ResponseEntity<UserGetDTO> getUserByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+        return ResponseEntity.ok(mediator.send(GetUserByEmailQuery.toQuery(email)));
     }
 
     @PostMapping
     public ResponseEntity<UserGetDTO> create(@RequestBody @Valid UserCreateDTO userCreateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userCreateDTO));
+        CreateUserCommand createUserCommand = createDTOCreateCommandMapper.toDto(userCreateDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mediator.send(createUserCommand));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserGetDTO> update(@RequestBody @Valid UserUpdateDTO userUpdateDTO, @PathVariable("id") UUID id) {
-        return ResponseEntity.ok(userService.update(userUpdateDTO, id));
+        UpdateUserCommand updateUserCommand = UpdateUserCommand.fromDTO(id, userUpdateDTO);
+        return ResponseEntity.ok(mediator.send(updateUserCommand));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        userService.delete(id);
+        mediator.send(DeleteUserCommand.toCommand(id));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

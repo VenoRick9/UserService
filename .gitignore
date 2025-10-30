@@ -14,6 +14,7 @@ target/
 .sts4-cache
 
 application-local.properties
+application-docker.properties
 
 ### IntelliJ IDEA ###
 .idea

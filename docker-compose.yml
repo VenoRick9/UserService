@@ -1,20 +1,69 @@
+#services:
+#  app:
+#    container_name: user-service
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user-service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=Postgres_9
+#      - SPRING_DATA_REDIS_HOST=redis
+#      - SPRING_DATA_REDIS_PORT=6379
+#    depends_on:
+#      - postgres
+#      - redis
+#    networks:
+#      - app-network
+#
+#  redis:
+#    image: redis:7.4.2
+#    container_name: redis
+#    ports:
+#      - '6379:6379'
+#    volumes:
+#      - redis-data:/data
+#    networks:
+#      - app-network
+#
+#  postgres:
+#    image: postgres:13
+#    container_name: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: Postgres_9
+#      POSTGRES_DB: user-service
+#    ports:
+#      - "5430:5432"
+#    volumes:
+#      - postgres-data:/var/lib/postgresql/data
+#    networks:
+#      - app-network
+#
+#volumes:
+#  postgres-data:
+#  redis-data:
+#
+#networks:
+#  app-network:
+#    external: true
+
+
 services:
-  app:
-    container_name: user-service
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+
+  postgres-user:
+    image: postgres:13
+    container_name: postgres-user
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user-service
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=Postgres_9
-      - SPRING_DATA_REDIS_HOST=redis
-      - SPRING_DATA_REDIS_PORT=6379
-    depends_on:
-      - postgres
-      - redis
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Postgres_9
+      POSTGRES_DB: user_service
+    ports:
+      - "5430:5432"
+    volumes:
+      - postgres-user-data:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -22,30 +71,63 @@ services:
     image: redis:7.4.2
     container_name: redis
     ports:
-      - '6379:6379'
+      - "6379:6379"
     volumes:
       - redis-data:/data
     networks:
       - app-network
 
-  postgres:
-    image: postgres:13
-    container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Postgres_9
-      POSTGRES_DB: user-service
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
     ports:
-      - "5430:5432"
+      - "27017:27017"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+      MONGO_INITDB_DATABASE: payment_db
     networks:
       - app-network
 
-volumes:
-  postgres-data:
-  redis-data:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - app-network
+
+  broker:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - app-network
+
 
 networks:
   app-network:
-    external: true
+    driver: bridge
+
+volumes:
+  postgres-user-data:
+  #postgres-order-data:
+  redis-data:
+  mongo-data:
+  #keycloak-postgres-data:
